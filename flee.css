@@ -1,0 +1,28 @@
+/* CSS declarations go here */
+
+@keyframes cursorspin {
+    0%   {cursor: n-resize;}
+    12%   {cursor: ne-resize;}
+    25%   {cursor: e-resize;}
+    37%   {cursor: se-resize;}
+    50%   {cursor: s-resize;}
+    62%   {cursor: sw-resize;}
+    75%   {cursor: w-resize;}
+    87%   {cursor: nw-resize;}
+}
+
+body {
+    height: 100%;
+    background-color: red;
+    cursor: n-resize;
+    animation-name: cursorspin;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease;
+}
+
+.log {
+  opacity: 0.3;
+  color:green;
+}
