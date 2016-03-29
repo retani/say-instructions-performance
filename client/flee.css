@@ -26,3 +26,15 @@ body {
   opacity: 0.3;
   color:green;
 }
+
+.test.speakers .indicator{
+    visibility: hidden;
+}
+
+.test.speakers.playing .indicator{
+    visibility: visible;
+}
+
+.wrong {
+    text-decoration: line-through;
+}

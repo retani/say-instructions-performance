@@ -18,3 +18,5 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 osxi:annyang
 sakukode:sayjs
+frozeman:template-var
+djedi:sanitize-html-client

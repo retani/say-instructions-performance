@@ -1,0 +1,72 @@
+<head>
+  <title>flee</title>
+</head>
+
+<body>
+  {{> intro}}
+  {{> dancefloor}}
+</body>
+
+<template name="dancefloor">
+  <!--h2>Metadata</h2-->
+  {{#if command}}
+    <code style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
+  {{else}}
+    <button>Click Me</button>
+  {{/if}}  
+  <p>
+    {{text}}
+    {{#each wrong}}
+      &thinsp;
+      <span class="wrong">
+        {{this}}
+      </span>
+    {{/each}}
+  </p>
+  <code class="log" style="{{#if hideInfo}}display:none{{/if}}">
+    {{#each log}}
+      {{this}}<br>
+    {{/each}}
+  </code>
+</template>
+
+<template name="intro">
+  {{> tests}}
+</template>
+
+<template name="tests">
+  <div class="tests">
+    <!--{{> Template.dynamic template='testSpeakers'}}-->
+    <!--{{> Template.dynamic template='testListening'}}-->
+  </div>
+</template>
+
+<template name="testSpeakers">
+  <div class="test speakers {{#if playing}}playing{{/if}}">
+    <h2>Test Speakers</h2>
+    <p>
+      Please set up your speakers and adjust the volume. Press <i>Start Playback</i> to test audio output.
+    </p>
+    <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
+    <p class="indicator">
+      Do you hear a voice counting «1.. 2..» loud and clear? If you do, press <i>Continue</i>. Otherwise, check your audio setup.
+      <button class="continue">Continue &gt;&gt;</button>
+    </p>
+  </div>
+</template>
+
+<template name="testListening">
+  <div class="test listening">
+    <h2>Test Input</h2>
+    <p>
+      Thank you! 
+      <canvas id="meter" width="500" height="50"></canvas>
+    </p>
+    <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
+    <p class="indicator">
+      Do you hear a voice counting «1.. 2..» loud and clear? If you do, press <i>Continue</i>. Otherwise, check your audio setup.
+      <button class="continue">Continue &gt;&gt;</button>
+    </p>
+  </div>
+</template>
+
