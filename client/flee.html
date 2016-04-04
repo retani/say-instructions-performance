@@ -19,7 +19,8 @@
   {{#if command}}
     <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
   {{else}}
-    <button>Click Me</button>
+    <!--button>Click Me</button-->
+    ...
   {{/if}}  
   <p>
     {{text}}
@@ -43,10 +44,14 @@
 
 <template name="tests">
   <div class="tests">
+    {{step}}
     {{#if step 1}}
       {{> Template.dynamic template='testSpeakers'}}
     {{/if}}
     {{#if step 2}}
+      {{> Template.dynamic template='testMicrophone'}}
+    {{/if}}    
+    {{#if step 3}}
       {{> Template.dynamic template='testListening'}}
     {{/if}}
   </div>
@@ -60,7 +65,27 @@
     </p>
     <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
     <p class="indicator">
-      Do you hear a voice counting «1.. 2..» loud and clear? If you do, press <i>Continue</i>. Otherwise, check your audio setup.
+      Do you hear a voice counting «1.. 2..»? If you do, press <i>Continue</i>. Otherwise, check your audio setup.
+      <button class="continue">Continue &gt;&gt;</button>
+    </p>
+  </div>
+</template>
+
+<template name="testMicrophone">
+  <div class="test microphone">
+    <h2>Test Microphone</h2>
+    <p>
+      Please allow your browser to access the microphone. 
+    </p>
+    <p>
+      Once you make noise, you should see the below <!--span class="striped" style="width:7ex; display:inline-block;">&nbsp;</span--> audio meter react.
+      <canvas id="meter" width="500" height="50" class="striped"></canvas>
+    </p>
+    <p>
+      Ideally, the indicator turns red and goes about half way up if you say something in a relaxed way. In case it stays green, try to speak up or to lower the distance to the microphone. It is also helpful to reduce background noise such as music or fans.
+    </p>
+    <p>
+      However, things don't need to be perfect.
       <button class="continue">Continue &gt;&gt;</button>
     </p>
   </div>
@@ -68,16 +93,22 @@
 
 <template name="testListening">
   <div class="test listening">
-    <h2>Test Input</h2>
-    <p>
-      Thank you! 
-      <canvas id="meter" width="500" height="50"></canvas>
+    <h2>Test Understanding</h2>
+    <p class="aloud {{#if understood}}confirm{{/if}}">
+      {{TemplateVar.get "infoText"}}
     </p>
-    <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
-    <p class="indicator">
-      Do you hear a voice counting «1.. 2..» loud and clear? If you do, press <i>Continue</i>. Otherwise, check your audio setup.
-      <button class="continue">Continue &gt;&gt;</button>
-    </p>
+    {{#if TemplateVar.get "understood"}}
+      <p class="aloud confirm">
+        {{TemplateVar.get "confirmText"}}
+      </p>    
+    {{else}}
+      <p class="info">
+        If there is no reaction to you saying "Hello", try again: Remain silent for 5 seconds, then say "Hello" loud and clear, then pause again for a while.
+      </p>
+      <p class="warning">
+        If there still is no reaction, there must be a problem. This could be a browser incompatibility or any other technical problem. Sorry. No access to the dancefloor for you. There has been a misunderstanding. Thanks for trying.
+      </p>        
+    {{/if}}
   </div>
 </template>
 

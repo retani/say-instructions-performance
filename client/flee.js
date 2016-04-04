@@ -12,7 +12,7 @@ Session.setDefault('annyangIsPaused', false);
 Session.setDefault('wrong', []);
 Session.setDefault('inFlow', true);
 Session.setDefault('introStep', 0);
-introStepComplete = 3
+introStepComplete = 4
 
 Session.setDefault('testingPlayback', false);
 
@@ -48,12 +48,14 @@ Template.dancefloor.helpers({
 });
 
 Template.dancefloor.events({
-  'click button': function () {
-    // increment the counter when button is clicked
-    //Session.set('counter', Session.get('counter') + 1);
+  /*'click button, load': function () {
     announceNext()
-  }
+  }*/
 });
+
+Template.dancefloor.onRendered(function(){
+  announceNext()
+})
 
 Template.tests.onCreated(function() {
   if (Session.equals('introStep', 0))
@@ -67,7 +69,8 @@ Template.tests.events({
 
 Template.tests.helpers({
   'step' : function(step) {
-    return Session.equals('introStep', step);
+    if (step) return Session.equals('introStep', step);
+    else return Session.get('introStep');
   }
 })
 
@@ -102,7 +105,7 @@ Template.testSpeakers.helpers({
   }
 })
 
-Template.testListening.events({
+Template.testMicrophone.events({
   'click .toggle_playback' : function(event) {
     TemplateVar.set("playing",!TemplateVar.get("playing"))
     var template = Template.instance()    
@@ -126,13 +129,13 @@ Template.testListening.events({
   }
 })
 
-Template.testListening.helpers({
+Template.testMicrophone.helpers({
   'playing' : function() {
     return TemplateVar.get("playing")
   }
 })
 
-Template.testListening.onRendered(function(){
+Template.testMicrophone.onRendered(function(){
   audioContext = null;
   meter = null;
   canvasContext = null;
@@ -146,15 +149,40 @@ Template.testListening.onRendered(function(){
   meter = createAudioMeter(audioContext,clipLevel,averaging,clipLag);
 
   annyang.addCommands({
-    'hello' : function() {
-      Session.set('introStep', Session.get('introStep')+1 )
+    "let's go" : function() {
+      Session.set('introStep', introStepComplete )
     }
   }, true);
   annyang.start()
 })
 
-Template.testListening.onDestroyed(function(){
+Template.testMicrophone.onDestroyed(function(){
   meter.shutdown();
+})
+
+Template.testListening.helpers({
+  'infoText' : function() {
+    return 'Thank you! Now we need to test speech recognition. Say "Hello".'
+  }
+})
+
+Template.testListening.onCreated(function(){
+  TemplateVar.set(this,"infoText", 'Thank you! Now we need to test speech recognition. Say "Hello".')
+  TemplateVar.set(this,"confirmText", "Very Good! I read you. Let's go!  ")
+})
+
+Template.testListening.onRendered(function(){
+  var template = this
+  annyang.addCommands({
+    'hello' : function() {
+      //Session.set('introStep', Session.get('introStep')+1)
+      TemplateVar.set(template, 'understood', true)
+      speak(TemplateVar.get(template, "confirmText"), function(){
+        Session.set('introStep', Session.get('introStep')+1)
+      })
+    }
+  }, true);
+  annyang.start()
 })
 
 var sound = new Howl({
