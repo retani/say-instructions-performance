@@ -11,9 +11,14 @@
     87%   {cursor: nw-resize;}
 }
 
+@keyframes prompt {
+    0%   {visibility: visible;}
+    90%  {visibility: hidden;}
+}
+
 body {
     height: 100%;
-    background-color: red;
+    background-color: transparent;
     cursor: n-resize;
     animation-name: cursorspin;
     animation-duration: 1.2s;
@@ -37,4 +42,21 @@ body {
 
 .wrong {
     text-decoration: line-through;
+}
+
+.directions {
+    background-color: rgba(133,133,133,0.6);
+    border-radius: 1em;
+    padding: 1em;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    animation: prompt 2s infinite;
+    visibility: hidden;
+}
+
+#meter {
+    width: 100%;
 }

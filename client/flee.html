@@ -3,14 +3,21 @@
 </head>
 
 <body>
-  {{> intro}}
-  {{> dancefloor}}
+  {{> layout}}
 </body>
+
+<template name="layout">
+  {{#if introActive}}
+    {{> intro}}
+  {{else}}
+    {{> dancefloor}}
+  {{/if}}
+</template>
 
 <template name="dancefloor">
   <!--h2>Metadata</h2-->
   {{#if command}}
-    <code style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
+    <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
   {{else}}
     <button>Click Me</button>
   {{/if}}  
@@ -36,8 +43,12 @@
 
 <template name="tests">
   <div class="tests">
-    <!--{{> Template.dynamic template='testSpeakers'}}-->
-    <!--{{> Template.dynamic template='testListening'}}-->
+    {{#if step 1}}
+      {{> Template.dynamic template='testSpeakers'}}
+    {{/if}}
+    {{#if step 2}}
+      {{> Template.dynamic template='testListening'}}
+    {{/if}}
   </div>
 </template>
 

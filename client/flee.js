@@ -2,7 +2,6 @@ Session.setDefault('text', 'Once upon a time, the freak followed her home. Home 
 //Session.setDefault('text', 'Iteration is the act of repeating a process, either to generate a unbounded sequence of outcomes, or with the aim of approaching a desired goal, target or result. Each repetition of the process is also called an "iteration", and the results of one iteration are used as the starting point for the next iteration.');
 //Session.setDefault('text', 'The main purpose of metadata is to facilitate in the discovery of relevant information, more often classified as resource discovery. Metadata also helps organize electronic resources, provide digital identification, and helps support archiving and preservation of the resource. Metadata assists in resource discovery by "allowing resources to be found by relevant criteria, identifying resources, bringing similar resources together, distinguishing dissimilar resources, and giving location information."')
 
-
 Session.setDefault('counter', 0);
 Session.setDefault('length', 1);
 Session.setDefault('command', null);
@@ -12,8 +11,16 @@ Session.setDefault('annyangIsListening', false);
 Session.setDefault('annyangIsPaused', false);
 Session.setDefault('wrong', []);
 Session.setDefault('inFlow', true);
+Session.setDefault('introStep', 0);
+introStepComplete = 3
 
 Session.setDefault('testingPlayback', false);
+
+Template.layout.helpers({
+  'introActive': function () {
+    return Session.get('introStep') < introStepComplete
+  }
+});
 
 Template.dancefloor.helpers({
   counter: function () {
@@ -48,6 +55,23 @@ Template.dancefloor.events({
   }
 });
 
+Template.tests.onCreated(function() {
+  if (Session.equals('introStep', 0))
+    Session.set('introStep', 1)
+  console.log(Session.get('introStep'))
+})
+
+Template.tests.events({
+  
+})
+
+Template.tests.helpers({
+  'step' : function(step) {
+    return Session.equals('introStep', step);
+  }
+})
+
+
 Template.testSpeakers.events({
   'click .toggle_playback' : function(event) {
     TemplateVar.set("playing",!TemplateVar.get("playing"))
@@ -68,6 +92,7 @@ Template.testSpeakers.events({
   },
   'click .continue' : function(event) {
     TemplateVar.set("playing",false)
+    Session.set('introStep', Session.get('introStep')+1 );
   }
 })
 
@@ -97,6 +122,7 @@ Template.testListening.events({
   },
   'click .continue' : function(event) {
     TemplateVar.set("playing",false)
+    Session.set('introStep', Session.get('introStep')+1 );
   }
 })
 
@@ -118,11 +144,29 @@ Template.testListening.onRendered(function(){
   rafID = null;
   audioMeterInit(document.getElementById( "meter" ));
   meter = createAudioMeter(audioContext,clipLevel,averaging,clipLag);
+
+  annyang.addCommands({
+    'hello' : function() {
+      Session.set('introStep', Session.get('introStep')+1 )
+    }
+  }, true);
+  annyang.start()
 })
 
 Template.testListening.onDestroyed(function(){
   meter.shutdown();
 })
+
+var sound = new Howl({
+  urls: ['go_ahead.wav'],
+  autoplay : false,
+  volume : 0.1
+})
+
+Meteor.setInterval(function(){
+  //if (Session.equals('annyangIsListening', true))
+    //sound.play()
+}, 2000)
 
 /*
 Template.testSpeakers.events({

@@ -24,6 +24,7 @@ initLog()
 initAnnyang = function(){
   annyang.addCallback('resultNoMatch', function(phrases){
     console.log(phrases)
+    if (!Session.equals('introSteps', introStepComplete)) return;
     if (phrases && phrases.some(function(){ return Session.get('command').search(this) > -1 })) {
       console.log("twice")
     }
@@ -33,6 +34,7 @@ initAnnyang = function(){
   })
   annyang.addCallback('resultMatch', function(phrases){
     console.log(phrases)
+    if (!Session.equals('introSteps', introStepComplete)) return;
     Session.set('wrong', []);
     Session.set('inFlow', true);
   })  
