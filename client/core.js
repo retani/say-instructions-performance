@@ -47,7 +47,7 @@ initAnnyang = function(){
   })      
 }
 
-lonelyWords = ['a','An','her','where','is','the', 'of']
+lonelyWords = ['a','an','her','where','is','the', 'of']
 
 listenCurrent = function() {
   var commands = {}
@@ -57,8 +57,11 @@ listenCurrent = function() {
     callback: 
       function() { 
       Session.set('counter', Session.get('counter') + Session.get('length'))
-      if (lonelyWords.indexOf(splicedText().command) > -1) Session.set('length',3)
-      else Session.set('length',2)
+      
+      // adjust length for lonely words
+      if (lonelyWords.indexOf(splicedText().command.toLowerCase()) > -1) Session.set('length',2)
+      else Session.set('length',1)
+
       announceNext() 
     }
   }
@@ -104,7 +107,9 @@ announceNext = function(repeat = false) {
       }, 500);        
     }
     else {
-      speak("Say: " + command, function(){
+      pause()
+      speak(/*"Say: " + */command, function(){
+        resume()
         /*if (!repeat)*/ listenCurrent()
       })
     }
@@ -116,12 +121,16 @@ splicedText = function() {
   var remains = ar.splice(0, Session.get('counter'))
   var command = ""
   var current = ""
+  var commandComponents = []
   for (var i=0; i<Session.get('length'); i++) {
-    command = (command + " " + ar[i].replace(/\W/g, '')).trim()
+    var component = ar[i].replace(/\W/g, '')
+    command = (command + " " + component).trim()
+    commandComponents.push(component)
     current = current + ar[i]
   }
   return {
     command: command,
+    commandComponents: commandComponents,
     current: current,
     past: ar.join(" "),
     remains: remains.splice(0, Session.get('length')).join(" "),
@@ -130,6 +139,26 @@ splicedText = function() {
 
 Tracker.autorun(function () {
 });
+
+var pause = function() {
+  //annyang.pause()
+  annyang.abort()
+  Session.set('annyangIsPaused', true);
+}
+
+var resume = function() {
+  annyang.resume()
+  //annyang.start()
+  Session.set('annyangIsPaused', false);
+
+  // failsafe
+  Meteor.setTimeout(function(){
+    if (!annyang.isListening()) {
+      colorLog("FAILSAFE RESUME", red)
+      annyang.resume()
+    }    
+  },500)
+}
 
 if (annyang) {
   initAnnyang()

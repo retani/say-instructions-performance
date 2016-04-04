@@ -23,7 +23,13 @@ Template.layout.helpers({
   },
   'unsupported' : function() {
     return Session.get("browser_ok")
-  }
+  },
+  'isListening' : function() {
+    return Session.get('annyangIsListening');
+  },
+  'isPaused' : function() {
+    return Session.get('annyangIsPaused');
+  }  
 });
 
 Template.dancefloor.helpers({
@@ -48,6 +54,9 @@ Template.dancefloor.helpers({
   },
   'wrong' : function() {
     return Session.get('wrong');
+  },
+  'listening' : function() {
+    return Session.get('annyangIsListening');
   }
 });
 
@@ -206,7 +215,8 @@ var sound = new Howl({
 Meteor.setInterval(function(){
   //if (Session.equals('annyangIsListening', true))
     //sound.play()
-}, 2000)
+    Session.set('annyangIsListening', annyang.isListening());
+}, 500)
 
 /*
 Template.testSpeakers.events({

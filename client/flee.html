@@ -53,10 +53,12 @@
       {{> dancefloor}}
     {{/if}}
   {{/if}}
+  {{> indicatorPanel name="listening" class="listeningIndicator" state=isListening}}
+  <!--{{> indicatorPanel name="paused" class="pausedIndicator" state=isPaused}}-->
 </template>
 
 <template name="dancefloor">
-  <div class="dancefloor">
+  <div class="dancefloor {{#if listening}}listening{{/if}}">
     <!--h2>Metadata</h2-->
     {{#if command}}
       <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
@@ -157,3 +159,10 @@
   </div>
 </template>
 
+<template name="indicatorPanel">
+  <div class="indicatorPanel {{class}} {{#if state}}on{{/if}}">
+    <div class="name">{{name}}</div>
+    <div class="indicator on">&nbsp;</div>
+    <div class="indicator off">&nbsp;</div>
+  </div>
+</template>
