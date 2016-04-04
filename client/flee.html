@@ -1,5 +1,42 @@
+<template name="truth">
+  <div class="truth">
+    <p>
+      An impossible act of communication, like a dance where one of the dancers accepts orders only. A total failure. How to move? 
+    </p>
+
+    <p>
+      Tell me what you see.<br>
+      Just look around you.<br>
+      The code breaks ground into something new.<br>
+      An alleyway of lust.<br>
+    </p>
+
+    <h1>entangled in a prison of structured data.</h1>
+
+    <p>
+      Once upon a time, the freak followed her home. Home is where peace resides. <br>
+      To solve this problem, I count on you. Go home.
+    </p>
+
+    <p>
+      Intimacy has broken a sequence of you and me. Fortifications in reasoning continue to brick a passageway. Turn up the volume. <br>
+      How do we move through?
+    </p>
+
+    <em>Drama is how a story evolves.</em>
+
+    <p>
+      One step at a time. One thought at once. Iterate. Iterate. Iterate yourself by counting up. 1, 2. Ready.  
+    </p>
+  </div>
+</template>
+
+
+
+
 <head>
   <title>flee</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
@@ -7,35 +44,44 @@
 </body>
 
 <template name="layout">
-  {{#if introActive}}
-    {{> intro}}
+  {{#if unsupported}}
+    Unfortunately, it won't work with your browser and|or device. Sorry. On a desktop computer, it's most likely to work with <a href="https://www.google.com/chrome/">Chrome</a>
   {{else}}
-    {{> dancefloor}}
+    {{#if introActive}}
+      {{> intro}}
+    {{else}}
+      {{> dancefloor}}
+    {{/if}}
   {{/if}}
 </template>
 
 <template name="dancefloor">
-  <!--h2>Metadata</h2-->
-  {{#if command}}
-    <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
-  {{else}}
-    <!--button>Click Me</button-->
-    ...
-  {{/if}}  
-  <p>
-    {{text}}
-    {{#each wrong}}
-      &thinsp;
-      <span class="wrong">
-        {{this}}
-      </span>
-    {{/each}}
-  </p>
-  <code class="log" style="{{#if hideInfo}}display:none{{/if}}">
-    {{#each log}}
-      {{this}}<br>
-    {{/each}}
-  </code>
+  <div class="dancefloor">
+    <!--h2>Metadata</h2-->
+    {{#if command}}
+      <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
+    {{else}}
+      <!--button>Click Me</button-->
+      ...
+    {{/if}}  
+    <p>
+      {{text}}
+      {{#each wrong}}
+        &thinsp;
+        <span class="wrong">
+          {{this}}
+        </span>
+      {{/each}}
+    </p>
+    <code class="log" style="{{#if hideInfo}}display:none{{/if}}">
+      {{#each log}}
+        {{this}}<br>
+      {{/each}}
+    </code>
+
+    {{> truth}}
+  </div>
+
 </template>
 
 <template name="intro">
@@ -43,8 +89,10 @@
 </template>
 
 <template name="tests">
-  <div class="tests">
-    {{step}}
+  <div class="tests dialogue">
+    <div class="steps dialogue-header">
+      Step {{step}}
+    </div>
     {{#if step 1}}
       {{> Template.dynamic template='testSpeakers'}}
     {{/if}}
@@ -61,11 +109,11 @@
   <div class="test speakers {{#if playing}}playing{{/if}}">
     <h2>Test Speakers</h2>
     <p>
-      Please set up your speakers and adjust the volume. Press <i>Start Playback</i> to test audio output.
+      Please set up your speakers and adjust the volume. <br>Press <i>Start Playback</i> to test audio output.
     </p>
     <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
     <p class="indicator">
-      Do you hear a voice counting «1.. 2..»? If you do, press <i>Continue</i>. Otherwise, check your audio setup.
+      Do you hear a voice counting «1.. 2..»? <br>If you do, press <i>Continue</i>. Otherwise, check your audio setup.
       <button class="continue">Continue &gt;&gt;</button>
     </p>
   </div>
@@ -92,23 +140,20 @@
 </template>
 
 <template name="testListening">
-  <div class="test listening">
+  <div class="test listening {{#if TemplateVar.get "understood"}}understood{{/if}}">
     <h2>Test Understanding</h2>
     <p class="aloud {{#if understood}}confirm{{/if}}">
       {{TemplateVar.get "infoText"}}
     </p>
-    {{#if TemplateVar.get "understood"}}
-      <p class="aloud confirm">
-        {{TemplateVar.get "confirmText"}}
-      </p>    
-    {{else}}
-      <p class="info">
-        If there is no reaction to you saying "Hello", try again: Remain silent for 5 seconds, then say "Hello" loud and clear, then pause again for a while.
-      </p>
-      <p class="warning">
-        If there still is no reaction, there must be a problem. This could be a browser incompatibility or any other technical problem. Sorry. No access to the dancefloor for you. There has been a misunderstanding. Thanks for trying.
-      </p>        
-    {{/if}}
+    <p class="aloud confirm">
+      {{TemplateVar.get "confirmText"}}
+    </p>    
+    <p class="info">
+      If there is no reaction to you saying "Hello", try again: Remain silent for 5 seconds, then say "Hello" loud and clear, then pause again for a while.
+    </p>
+    <p class="warning">
+      If there still is no reaction, there must be a problem. This could be a browser incompatibility or any other technical problem. Sorry. No access to the dancefloor for you. There has been a misunderstanding. Thanks for trying.
+    </p>        
   </div>
 </template>
 

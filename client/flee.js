@@ -2,6 +2,7 @@ Session.setDefault('text', 'Once upon a time, the freak followed her home. Home 
 //Session.setDefault('text', 'Iteration is the act of repeating a process, either to generate a unbounded sequence of outcomes, or with the aim of approaching a desired goal, target or result. Each repetition of the process is also called an "iteration", and the results of one iteration are used as the starting point for the next iteration.');
 //Session.setDefault('text', 'The main purpose of metadata is to facilitate in the discovery of relevant information, more often classified as resource discovery. Metadata also helps organize electronic resources, provide digital identification, and helps support archiving and preservation of the resource. Metadata assists in resource discovery by "allowing resources to be found by relevant criteria, identifying resources, bringing similar resources together, distinguishing dissimilar resources, and giving location information."')
 
+Session.setDefault('browser_ok', false);
 Session.setDefault('counter', 0);
 Session.setDefault('length', 1);
 Session.setDefault('command', null);
@@ -19,6 +20,9 @@ Session.setDefault('testingPlayback', false);
 Template.layout.helpers({
   'introActive': function () {
     return Session.get('introStep') < introStepComplete
+  },
+  'unsupported' : function() {
+    return Session.get("browser_ok")
   }
 });
 
@@ -55,6 +59,13 @@ Template.dancefloor.events({
 
 Template.dancefloor.onRendered(function(){
   announceNext()
+})
+
+Template.truth.onRendered(function(){
+  var text = $(this.firstNode).html()
+  var raw = text.replace(/(<([^>]+)>)/ig,"").trim();
+  Session.set('text', raw);
+  console.log(raw)
 })
 
 Template.tests.onCreated(function() {
@@ -167,8 +178,8 @@ Template.testListening.helpers({
 })
 
 Template.testListening.onCreated(function(){
-  TemplateVar.set(this,"infoText", 'Thank you! Now we need to test speech recognition. Say "Hello".')
-  TemplateVar.set(this,"confirmText", "Very Good! I read you. Let's go!  ")
+  TemplateVar.set(this,"infoText", 'Thank you! Now we need to test speech recognition. Speak out the word "Hello".')
+  TemplateVar.set(this,"confirmText", "Very Good! I read you. Let's go.")
 })
 
 Template.testListening.onRendered(function(){
@@ -176,6 +187,7 @@ Template.testListening.onRendered(function(){
   annyang.addCommands({
     'hello' : function() {
       //Session.set('introStep', Session.get('introStep')+1)
+      annyang.abort()
       TemplateVar.set(template, 'understood', true)
       speak(TemplateVar.get(template, "confirmText"), function(){
         Session.set('introStep', Session.get('introStep')+1)

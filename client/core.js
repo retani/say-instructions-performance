@@ -24,29 +24,30 @@ initLog()
 initAnnyang = function(){
   annyang.addCallback('resultNoMatch', function(phrases){
     console.log(phrases)
-    if (!Session.equals('introSteps', introStepComplete)) return;
+    if (!Session.equals('introStep', introStepComplete)) return;
     if (phrases && phrases.some(function(){ return Session.get('command').search(this) > -1 })) {
       console.log("twice")
     }
+    console.log("wrong")
     Session.set('wrong', Session.get('wrong').concat(phrases));
     Session.set('inFlow', false);
     announceNext(true)
   })
   annyang.addCallback('resultMatch', function(phrases){
     console.log(phrases)
-    if (!Session.equals('introSteps', introStepComplete)) return;
+    if (!Session.equals('introStep', introStepComplete)) return;
     Session.set('wrong', []);
     Session.set('inFlow', true);
   })  
   annyang.addCallback('start', function(){
     colorLog("START",'red')
   })    
-  annyang.addCallback('start', function(){
+  annyang.addCallback('end', function(){
     colorLog("END",'red')
   })      
-}()
+}
 
-lonelyWords = ['a','her','where','is','the']
+lonelyWords = ['a','An','her','where','is','the', 'of']
 
 listenCurrent = function() {
   var commands = {}
@@ -56,8 +57,8 @@ listenCurrent = function() {
     callback: 
       function() { 
       Session.set('counter', Session.get('counter') + Session.get('length'))
-      if (lonelyWords.indexOf(splicedText().command) > -1) Session.set('length',2)
-      else Session.set('length',1)
+      if (lonelyWords.indexOf(splicedText().command) > -1) Session.set('length',3)
+      else Session.set('length',2)
       announceNext() 
     }
   }
@@ -129,3 +130,11 @@ splicedText = function() {
 
 Tracker.autorun(function () {
 });
+
+if (annyang) {
+  initAnnyang()
+  Session.set("browser_ok", false)
+}
+else {
+  Session.set("browser_ok", true)
+}
