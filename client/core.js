@@ -54,16 +54,7 @@ listenCurrent = function() {
   var command = Session.get('command')
   commands[command] = {
     regexp: new RegExp(command, 'i'),
-    callback: 
-      function() { 
-      Session.set('counter', Session.get('counter') + Session.get('length'))
-      
-      // adjust length for lonely words
-      if (lonelyWords.indexOf(splicedText().command.toLowerCase()) > -1) Session.set('length',2)
-      else Session.set('length',1)
-
-      announceNext() 
-    }
+    callback: switchNext
   }
   console.log(commands)
   annyang.removeCommands();
@@ -80,6 +71,16 @@ listenCurrent = function() {
     annyang.resume();
   }
   console.log("LISTENING: " + command)
+}
+
+switchNext =  function() { 
+  Session.set('counter', Session.get('counter') + Session.get('length'))
+  
+  // adjust length for lonely words
+  if (lonelyWords.indexOf(splicedText().command.toLowerCase()) > -1) Session.set('length',2)
+  else Session.set('length',1)
+
+  announceNext() 
 }
 
 announceNext = function(repeat = false) {
@@ -108,7 +109,8 @@ announceNext = function(repeat = false) {
     }
     else {
       pause()
-      speak(/*"Say: " + */command, function(){
+      var text = (Session.get('counter') < 6 ? 'Say: ' : '') + command
+      speak(text, function(){
         resume()
         /*if (!repeat)*/ listenCurrent()
       })
@@ -136,6 +138,8 @@ splicedText = function() {
     remains: remains.splice(0, Session.get('length')).join(" "),
   }
 }
+
+
 
 Tracker.autorun(function () {
 });

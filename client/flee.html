@@ -45,15 +45,15 @@
 
 <template name="layout">
   {{#if unsupported}}
-    Unfortunately, it won't work with your browser and|or device. Sorry. On a desktop computer, it's most likely to work with <a href="https://www.google.com/chrome/">Chrome</a>
+    Unfortunately, it won't work with your browser and/or device. Sorry. On a desktop computer, it's most likely to work with <a href="https://www.google.com/chrome/">Chrome</a>
   {{else}}
     {{#if introActive}}
       {{> intro}}
     {{else}}
       {{> dancefloor}}
     {{/if}}
+  {{> indicatorPanel name="listening" class="listeningIndicator" state=isListening}}    
   {{/if}}
-  {{> indicatorPanel name="listening" class="listeningIndicator" state=isListening}}
   <!--{{> indicatorPanel name="paused" class="pausedIndicator" state=isPaused}}-->
 </template>
 

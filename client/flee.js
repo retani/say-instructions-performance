@@ -68,6 +68,14 @@ Template.dancefloor.events({
 
 Template.dancefloor.onRendered(function(){
   announceNext()
+
+  window.onkeydown = function(e) {  
+    console.log(e)
+    if (e.keyCode == 8) {
+        switchNext()
+        return false
+    }    
+  }    
 })
 
 Template.truth.onRendered(function(){
