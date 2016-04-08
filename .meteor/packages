@@ -20,4 +20,8 @@ djedi:sanitize-html-client
 standard-minifier-css
 standard-minifier-js
 ovcharik:howler
+<<<<<<< HEAD
 osxi:annyang@2.2.1
+=======
+retani:annyang
+>>>>>>> 326c3eda15aa06c73f616f3140fb1339cc1f4a55
