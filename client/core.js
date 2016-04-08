@@ -109,7 +109,7 @@ announceNext = function(repeat = false) {
     }
     else {
       pause()
-      var text = (Session.get('counter') < 6 ? 'Say: ' : '') + command
+      var text = ( repeat || Session.get('counter') < 6 ? 'Say: ' : '') + command
       speak(text, function(){
         resume()
         /*if (!repeat)*/ listenCurrent()

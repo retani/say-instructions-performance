@@ -6,7 +6,6 @@
 
 meteor-base             # Packages every Meteor app needs to have
 mobile-experience       # Packages for a great mobile UX
-mongo                   # The database Meteor supports right now
 blaze-html-templates    # Compile .html files into Meteor Blaze views
 session                 # Client-side reactive dictionary for your app
 jquery                  # Helpful client-side library
@@ -15,10 +14,10 @@ tracker                 # Meteor's client-side reactive programming library
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 ecmascript              # Enable ECMAScript2015+ syntax in app code
 
-osxi:annyang
 sakukode:sayjs
 frozeman:template-var
 djedi:sanitize-html-client
 standard-minifier-css
 standard-minifier-js
 ovcharik:howler
+osxi:annyang@2.2.1
