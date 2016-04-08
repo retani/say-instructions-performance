@@ -83,6 +83,20 @@ Template.truth.onRendered(function(){
   var raw = text.replace(/(<([^>]+)>)/ig,"").trim();
   Session.set('text', raw);
   console.log(raw)
+  
+  var elem = $(this.firstNode).get(0)
+  // http://stackoverflow.com/a/18927821
+  var array = [];
+
+  for(var i = 0, childs = elem.childNodes; i < childs.length; i ++) {
+    if (childs[i].nodeType === 3 /* document.TEXT_NODE */) {
+      array = array.concat(childs[i].nodeValue.trim().split(/\s+/));
+    } else {
+      array.push(childs[i].outerHTML);
+    }
+  }
+
+  console.log(array)
 })
 
 Template.tests.onCreated(function() {

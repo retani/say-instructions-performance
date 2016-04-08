@@ -1,21 +1,33 @@
 <html>
 
   <head>
-  <style>
-    body {
-      background:green;
-    }
-    iframe {
-      width:75%;
-      height:75%;
-    }
-    iframe
-  </style>
+    <title>magazine</title>
+    <style>
+      body {
+        background:white;
+        margin:0; padding:0;
+      }
+      iframe {
+        position:fixed; top:0;
+        margin:1em; padding:0;
+        width:calc(100% - 2em);
+        height:calc(100% - 2em);
+        border: dotted 1px rgba(0,0,0,0.3);
+      }
+      .hatch-new {
+        background-image: 
+          linear-gradient(45deg, transparent 45%, #919195 50%, transparent 55%, transparent 100%),
+          linear-gradient(-45deg, transparent 45%, #919195 50%, transparent 55%, transparent 100%);
+        background-size: 8px 8px;
+        background-position: 4px 4px;
+      }      
+    </style>
   </head>
 
-  <body>
-    <h1>Hello</h1>
-    <iframe ALLOWTRANSPARENCY="true" src="http://localhost:3000"></iframe>
+  <body class="hatch-new">
+    <h1>Flee, issue 2</h1>
+    <iframe ALLOWTRANSPARENCY="true" src="/"></iframe>
+    <!--iframe ALLOWTRANSPARENCY="true" src="https://entangled-motion.herokuapp.com/"></iframe-->
   </body>
 
 </html>

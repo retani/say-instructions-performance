@@ -130,6 +130,7 @@ body {
     min-width:320px;
     border:solid 1px black;
     padding: 1em;
+    background-color: white;
 }
 
 .dialogue-header {
