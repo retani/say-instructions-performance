@@ -1,4 +1,7 @@
 Session.setDefault('text', 'Once upon a time, the freak followed her home. Home is where peace resides. ');
+Session.setDefault('spliced', {});
+Session.setDefault('wordsList', []);
+Session.setDefault('tagsList', []);
 //Session.setDefault('text', 'Iteration is the act of repeating a process, either to generate a unbounded sequence of outcomes, or with the aim of approaching a desired goal, target or result. Each repetition of the process is also called an "iteration", and the results of one iteration are used as the starting point for the next iteration.');
 //Session.setDefault('text', 'The main purpose of metadata is to facilitate in the discovery of relevant information, more often classified as resource discovery. Metadata also helps organize electronic resources, provide digital identification, and helps support archiving and preservation of the resource. Metadata assists in resource discovery by "allowing resources to be found by relevant criteria, identifying resources, bringing similar resources together, distinguishing dissimilar resources, and giving location information."')
 
@@ -13,6 +16,7 @@ Session.setDefault('annyangIsPaused', false);
 Session.setDefault('wrong', []);
 Session.setDefault('inFlow', true);
 Session.setDefault('introStep', 0);
+Session.setDefault('finished', false);
 introStepComplete = 4
 
 Session.setDefault('testingPlayback', false);
@@ -37,14 +41,20 @@ Template.dancefloor.helpers({
     return Session.get('counter');
   },
   text: function () {
-    var ar = Session.get('text').split(" ")
-    var remains = ar.splice(0, Session.get('counter'))
-    //var remains = remains.concat(ar[0])
-    //speak(ar[0])
-    return remains.join(' ')
+    var past = Session.get("spliced").past
+    Session.get('wrong').forEach(function (wrong) {
+      past += ' <span class="wrong">' + wrong + '</span> '
+    });
+    
+    var sanitizedPast = sanitizeHtml(past, {
+      allowedTags: false,
+      allowedAttributes: false
+    })
+    console.log(sanitizedPast)
+    return sanitizedPast
   },
   'command' : function () {
-    return Session.get('command');
+    return Session.get('spliced').command;
   },
   'log' : function() {
     return Session.get('log');
@@ -80,29 +90,130 @@ Template.dancefloor.onRendered(function(){
 
 Template.truth.onRendered(function(){
   var text = $(this.firstNode).html()
-  var raw = text.replace(/(<([^>]+)>)/ig,"").trim();
-  Session.set('text', raw);
-  console.log(raw)
-  
-  var elem = $(this.firstNode).get(0)
-  // http://stackoverflow.com/a/18927821
-  var array = [];
 
-  for(var i = 0, childs = elem.childNodes; i < childs.length; i ++) {
-    if (childs[i].nodeType === 3 /* document.TEXT_NODE */) {
-      array = array.concat(childs[i].nodeValue.trim().split(/\s+/));
-    } else {
-      array.push(childs[i].outerHTML);
+  var regexTags  = /<[^>]*>/g
+  var regex = regexTags
+  var temp;
+  var index = 0;
+  var tagsList = []
+  while ((temp = regex.exec(text)) !== null && index < 1000) {
+    //console.log(temp)
+    //var msg = 'Found ' + temp[0] + ' ' + temp['index'] + " - " + regex.lastIndex;
+    //console.log(msg);
+    index++
+    tagsList.push ({
+      'content': temp[0],
+      'begin': temp['index'],
+      'end': regex.lastIndex,
+      'tagName': temp[0].match(/\w+/)[0],
+      'opens': temp[0].substr(1,1) != "/"
+    })
+  }  
+
+  console.log(tagsList)
+
+  var wordsList = []
+  var wordsListIndex = 0
+  var fixedLengthSection = false
+  var fixedLengthSectionWordIndex = 0
+  for(var i=-1; i < tagsList.length; i++) {
+    if (i == -1) {
+      var begin = 0
+      var end   = (tagsList[0].begin == 0 ? 0 : tagsList[0].begin)
     }
+    else {
+      var begin = tagsList[i].end
+      var end   = ( tagsList[i+1] ? tagsList[i+1].begin : text.length-1)
+    }
+    var tag = tagsList[i]
+    if (tag) console.log(tag.tagName)
+    if (tag && tag.tagName == "cite") {
+      fixedLengthSection = tag.opens
+      if (tag.opens) {
+        fixedLengthSectionWordIndex = wordsListIndex
+      }
+      else {
+        //console.log(wordsListIndex, fixedLengthSectionWordIndex)
+        wordsList[fixedLengthSectionWordIndex].fixedLength = wordsListIndex - fixedLengthSectionWordIndex
+      }
+      
+    }
+
+    var chunk = text.substring(begin, end)
+    var regex = /\w+/g
+    var words = []
+    var temp
+    var index = 0
+    while ((temp = regex.exec(chunk)) !== null && index < 1000) {
+      //var msg = 'Found ' + temp[0] + ' ' + temp['index']+begin + " - " + regex.lastIndex+begin;
+      //console.log(msg);
+      index++
+      wordsListIndex++
+      wordsList.push ({
+        'content': temp[0],
+        'begin': temp['index']+begin,
+        'end': regex.lastIndex+begin,
+        'tagsListIndex': i,
+        'fixedLength': fixedLengthSection
+      })
+    }
+    //console.log(i, words, chunk)
   }
 
-  console.log(array)
+  console.log(wordsList)
+
+  Session.set('text', text);
+  Session.set('tagsList', tagsList);
+  Session.set('wordsList', wordsList);
+
+  // var wordsList = []
+  // tagsList.forEach(function (tagElem, index) {
+  //   var begin = tagElem.end
+  //   console.log(text.substring(tagElem.begin, tagElem.end))
+
+  // });
+
+  // var parts = text.match(/(<[^>]*>)|(\w*[\.!\?,]?)/g)
+  // var parts = _(parts).filter(function(x){return x.length > 0})
+  // console.log(parts)
+
+  // var raw = text.replace(/(<([^>]+)>)/ig,"").replace(/(\n|\r)/," ").replace(/\s{2,}/,' ').trim();
+  // Session.set('text', raw);
+  // console.log(raw)
+  
+  // var elem = $(this.firstNode).get(0)
+  // // http://stackoverflow.com/a/18927821
+  // var array = [];
+
+  // for(var i = 0, childs = elem.childNodes; i < childs.length; i ++) {
+  //   if (childs[i].nodeType === 3 /* document.TEXT_NODE */) {
+  //     array = array.concat(childs[i].nodeValue.trim().split(/\s+/));
+  //   } else {
+  //     array.push(childs[i].outerHTML);
+  //   }
+  // }
+
+  // console.log(array)
+
+  
 })
+
+// separately get tags and words(including trailing .,?!): /(<[^>]*>)|(\w*[\.!\?,]?)/g
 
 Template.tests.onCreated(function() {
   if (Session.equals('introStep', 0))
     Session.set('introStep', 1)
   console.log(Session.get('introStep'))
+})
+
+Template.tests.onRendered(function(){
+  window.onkeydown = function(e) {  
+    console.log(e)
+    if (e.keyCode == 8) {
+      Session.set('introStep', introStepComplete);
+      return false
+    }    
+  }     
 })
 
 Template.tests.events({
@@ -228,11 +339,13 @@ Template.testListening.onRendered(function(){
   annyang.start()
 })
 
+/*
 var sound = new Howl({
   urls: ['go_ahead.wav'],
   autoplay : false,
   volume : 0.1
 })
+*/
 
 Meteor.setInterval(function(){
   //if (Session.equals('annyangIsListening', true))

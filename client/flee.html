@@ -5,16 +5,16 @@
     </p>
 
     <p>
-      Tell me what you see.<br>
-      Just look around you.<br>
-      The code breaks ground into something new.<br>
-      An alleyway of lust.<br>
+      <cite>Tell me what you see.</cite><br>
+      <cite>Just look around you.</cite><br>
+      <cite>The code breaks ground into something new.</cite><br>
+      <cite>An alleyway of lust.</cite><br>
     </p>
 
     <h1>entangled in a prison of structured data.</h1>
 
     <p>
-      Once upon a time, the freak followed her home. Home is where peace resides.<br>
+      Once upon a time, the <i>freak</i> followed her home. Home is where peace resides.<br>
       To solve this problem, I count on you. Go home.
     </p>
 
@@ -23,7 +23,7 @@
       How do we move through?
     </p>
 
-    <em>Drama is how a story evolves.</em>
+    <em><cite>Drama is how a story evolves.</cite></em>
 
     <p>
       One step at a time. One thought at once. Iterate. Iterate. Iterate yourself by counting up. 1, 2. Ready.  
@@ -66,15 +66,9 @@
       <!--button>Click Me</button-->
       ...
     {{/if}}  
-    <p>
-      {{text}}
-      {{#each wrong}}
-        &thinsp;
-        <span class="wrong">
-          {{this}}
-        </span>
-      {{/each}}
-    </p>
+    <div class="reality">
+      {{{text}}}
+    </div>
     <code class="log" style="{{#if hideInfo}}display:none{{/if}}">
       {{#each log}}
         {{this}}<br>

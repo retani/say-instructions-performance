@@ -50,7 +50,6 @@ body {
     min-height:100vh;
     width:100%;
     box-sizing: border-box;
-    padding:1em;
 }
 
 .dancefloor.listening {
@@ -61,6 +60,12 @@ body {
     opacity: 0.2;
     position: absolute;
     top: 0;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.truth, .dancefloor {
+    padding: 1em;
 }
 
 .log {

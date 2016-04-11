@@ -25,7 +25,7 @@ initAnnyang = function(){
   annyang.addCallback('resultNoMatch', function(phrases){
     console.log(phrases)
     if (!Session.equals('introStep', introStepComplete)) return;
-    if (phrases && phrases.some(function(){ return Session.get('command').search(this) > -1 })) {
+    if (phrases && phrases.some(function(){ return Session.get('spliced').command.search(this) > -1 })) {
       console.log("twice")
     }
     console.log("wrong")
@@ -47,15 +47,19 @@ initAnnyang = function(){
   })      
 }
 
-lonelyWords = ['a','an','her','where','is','the', 'of']
+lonelyWords = ['a','an','her','where','is','the', 'of','one']
 
 listenCurrent = function() {
   var commands = {}
-  var command = Session.get('command')
+  var command = Session.get('spliced').command
   commands[command] = {
     regexp: new RegExp(command, 'i'),
     callback: switchNext
   }
+  commands['yes'] = {
+    regexp: new RegExp('yes', 'i'),
+    callback: switchNext
+  }  
   console.log(commands)
   annyang.removeCommands();
   annyang.addCommands(commands, true);
@@ -75,22 +79,40 @@ listenCurrent = function() {
 
 switchNext =  function() { 
   Session.set('counter', Session.get('counter') + Session.get('length'))
-  
-  // adjust length for lonely words
-  if (lonelyWords.indexOf(splicedText().command.toLowerCase()) > -1) Session.set('length',2)
-  else Session.set('length',1)
 
-  announceNext() 
+  Tracker.flush()
+  var spliced = Session.get('spliced');
+
+  // adjust length for blocks
+  if (spliced.preLength) {
+    Session.set('length', spliced.preLength);
+  }
+  // adjust length for lonely words
+  else {
+    if (lonelyWords.indexOf(spliced.command.toLowerCase()) > -1) Session.set('length',2)
+    else Session.set('length',1)
+  }
+
+  //while (lonelyWords.indexOf(spliced.command.toLowerCase()))
+
+  Tracker.flush()
+
+  if (Session.get('spliced').isLast) {
+    Session.set('finished', true);
+  }
+  else {
+    announceNext() 
+  }
 }
 
 announceNext = function(repeat = false) {
   if (repeat) {
-    var command = Session.get('command');
+    var command = Session.get('spliced').command;
   }
   else {
     var commands = {}
-    var command = splicedText().command
-    Session.set('command', command);
+    var command = Session.get('spliced').command
+    //Session.set('command', command);
     console.log("NEW COMMAND: " + command)    
   }
   if (command != null && command != "") {
@@ -118,30 +140,36 @@ announceNext = function(repeat = false) {
   }
 }
 
-splicedText = function() {
-  var ar = Session.get('text').split(" ")
-  var remains = ar.splice(0, Session.get('counter'))
-  var command = ""
-  var current = ""
-  var commandComponents = []
-  for (var i=0; i<Session.get('length'); i++) {
-    var component = ar[i].replace(/\W/g, '')
-    command = (command + " " + component).trim()
-    commandComponents.push(component)
-    current = current + ar[i]
-  }
-  return {
-    command: command,
-    commandComponents: commandComponents,
-    current: current,
-    past: ar.join(" "),
-    remains: remains.splice(0, Session.get('length')).join(" "),
-  }
+spliceText = function() {
+  var string = Session.get('text');
+  var counter = Session.get('counter');
+  var length = Session.get('length');
+  var wordsList = Session.get('wordsList');
+  var tagsList = Session.get('tagsList');
+  if (!tagsList || !wordsList || tagsList.length == 0 || wordsList.length == 0) return {}
+
+  var beginWord = wordsList[counter];
+  var endWord = wordsList[counter+length-1];
+  var beginIndex = beginWord.begin
+  var endIndex = (wordsList[counter+length] ? wordsList[counter+length].begin-1 : string.length-1)
+
+  var spliced = {
+    command: _(wordsList.slice(counter, counter+length)).pluck('content').join(" "),
+    commandComponents: wordsList.slice(counter, counter+length),
+    current: string.substring(beginIndex, endIndex),
+    past: string.substring(0,beginIndex),
+    remains: string.substring(endIndex, string.length-1),
+    preLength: beginWord.fixedLength,
+    isLast: typeof(wordsList[counter+length]) == "undefined"
+  }    
+  return spliced  
 }
 
-
-
 Tracker.autorun(function () {
+
+  console.log("autorun splice")
+
+  Session.set('spliced', spliceText());
 });
 
 var pause = function() {
@@ -158,7 +186,7 @@ var resume = function() {
   // failsafe
   Meteor.setTimeout(function(){
     if (!annyang.isListening()) {
-      colorLog("FAILSAFE RESUME", red)
+      colorLog("FAILSAFE RESUME", 'red')
       annyang.resume()
     }    
   },500)
