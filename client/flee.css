@@ -195,16 +195,31 @@ body[data-step="4"] {
     text-align: center;
 }
 
+.close {
+    position:fixed;
+    top:0.6em; right: 0.6em;
+    z-index: 100;
+}
+
+.close:hover {
+    cursor: pointer;
+}
+
+
 .dialogue-header .close {
     float: right;
+    position: static;
 }
 
 .dialogue-header .close:hover {
     background-color: white;
     color:black;
-    cursor: pointer;
 }
 
+.dancefloor .close:hover {
+    background-color: black;
+    color:white;
+}
 
 .indicatorPanel {
     position: fixed;

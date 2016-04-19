@@ -234,7 +234,7 @@ Template.tests.onRendered(function(){
   }     
 })
 
-Template.tests.events({
+Template.close.events({
   'click .close' : function(event) {
     exit();
   }
