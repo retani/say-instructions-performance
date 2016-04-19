@@ -27,6 +27,8 @@ body {
     font-family: sans-serif;
 
     background-color: transparent;
+    background-color: rgba(0,0,0,0);
+    
     cursor: n-resize;
     animation-name: cursorspin;
     animation-duration: 1.2s;
@@ -43,6 +45,19 @@ body {
     margin:0;
 }
 
+body[data-step="3"] {
+    background-color: rgba(255,255,255,0.4);
+    transition: background-color 3s;
+}
+
+
+body[data-step="3"][data-listening-ok="true"],
+body[data-step="4"] {
+    background-color: rgba(255,255,255,1);
+    transition: background-color 0.5s;
+}
+
+
 .dancefloor {
     font-family: 'Press Start 2P','Milonga';
     font-size: 110%;
@@ -50,10 +65,11 @@ body {
     min-height:100vh;
     width:100%;
     box-sizing: border-box;
+    transition: background-color: 0.3s;
 }
 
 .dancefloor.listening {
-    background-color: rgba(0,255,0,0.3)
+    background-color: rgba(0,255,0,0.12)
 }
 
 .truth {
@@ -113,13 +129,11 @@ body {
 }
 
 .striped {
-  background: repeating-linear-gradient(
-    -55deg,
-    #222,
-    #222 10px,
-    #333 10px,
-    #333 20px
-  );    
+    background-image: 
+      linear-gradient(-45deg, transparent 50%, #919195 50%, transparent 55%, transparent 60%);
+    background-size: 12px 12px;
+    background-position: 4px 4px;  
+    border: solid 1px rgba(133,133,133,0.5);
 }
 
 .warning {
@@ -133,17 +147,52 @@ body {
 .dialogue {
     width:50%;
     min-width:260px;
+    max-width: 500px;
     border:solid 1px black;
-    padding: 1em;
+    padding: 1em 2em;
     background-color: white;
+    line-height: 1.1;
+    letter-spacing: 0.1ex;
+}
+
+.dialogue h2 {
+    text-decoration: underline;
+}
+
+.dialogue button {
+    position:relative;
+    font-weight: bold;
+    padding: 0.6em;
+    font-size: inherit;
+    box-shadow: 7px 7px 6px #888888;
+}
+
+.dialogue button.continue {
+    clear: both;
+    float:right;
+    margin-top: 1.5em;
+    margin-bottom: 1em;
+}
+
+.dialogue button:hover {
+    -webkit-filter: brightness(0.9);
+    cursor: pointer;
+}
+
+.dialogue button:active {
+    -webkit-filter: brightness(0.9);
+    cursor: pointer;
+    box-shadow: 5px 5px 5px #888888;
+    top:2px; left:2px;
 }
 
 .dialogue-header {
-    margin:-1em;
+    margin:-1em -2em;
     margin-bottom: 0;
     background:black;
-    color:white;
-    padding:1ex 1em;
+    color:#eee;
+    padding:1em 2em;
+    text-align: center;
 }
 
 .dialogue-header .close {
@@ -161,7 +210,7 @@ body {
     position: fixed;
     bottom: 1em;
     right: 1em;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .indicatorPanel:nth-of-type(1) {

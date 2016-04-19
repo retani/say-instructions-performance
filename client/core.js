@@ -56,9 +56,18 @@ listenCurrent = function() {
     regexp: new RegExp(command, 'i'),
     callback: switchNext
   }
-  commands['yes'] = {
-    regexp: new RegExp('yes', 'i'),
-    callback: switchNext
+  if (Session.equals('allow_say_yes', true)){
+    commands['yes'] = {
+      regexp: new RegExp('yes', 'i'),
+      callback: switchNext
+    }  
+  }
+  commands['say ' + command] = {
+    callback: function() {
+      speak("why?", function(){
+        announceNext(true)
+      })
+    }
   }  
   console.log(commands)
   annyang.removeCommands();
@@ -131,7 +140,7 @@ announceNext = function(repeat = false) {
     }
     else {
       pause()
-      var text = ( repeat || Session.get('counter') < 6 ? 'Say: ' : '') + command
+      var text = ( repeat || Session.get('say_say') ? 'Say: ' : '') + command
       speak(text, function(){
         resume()
         /*if (!repeat)*/ listenCurrent()

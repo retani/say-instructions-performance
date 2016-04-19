@@ -7,7 +7,6 @@
   function receiveMessage(event)
   {
     var origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
-    console.log(event)
     if (/*origin !== "http://example.org:8080"*/ !event.data || !event.data.saymetadata )
       return;
 
@@ -17,7 +16,6 @@
         elem.remove()
         break;
       default:
-
     }
     
   }

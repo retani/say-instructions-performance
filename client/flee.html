@@ -1,7 +1,7 @@
 <template name="truth">
   <div class="truth">
     <p>
-      An impossible act of communication, like a dance where one of the dancers accepts orders only. A total failure. How to move? 
+      An impossible act of communication, like a dance where one of the dancers accepts orders only. How to move? 
     </p>
 
     <p>
@@ -84,13 +84,17 @@
   {{> tests}}
 </template>
 
+<template name="close">
+  <div class="close">
+    X
+  </div>
+</template>
+
 <template name="tests">
   <div class="tests dialogue">
     <div class="steps dialogue-header">
-      Step {{step}}
-      <div class="close">
-        X
-      </div>
+      saymetadata
+      {{> close}}
     </div>
     {{#if step 1}}
       {{> Template.dynamic template='testSpeakers'}}

@@ -6,6 +6,7 @@ Session.setDefault('tagsList', []);
 //Session.setDefault('text', 'The main purpose of metadata is to facilitate in the discovery of relevant information, more often classified as resource discovery. Metadata also helps organize electronic resources, provide digital identification, and helps support archiving and preservation of the resource. Metadata assists in resource discovery by "allowing resources to be found by relevant criteria, identifying resources, bringing similar resources together, distinguishing dissimilar resources, and giving location information."')
 
 Session.setDefault('browser_ok', false);
+Session.setDefault('listening_ok', false);
 Session.setDefault('counter', 0);
 Session.setDefault('length', 1);
 Session.setDefault('command', null);
@@ -19,7 +20,24 @@ Session.setDefault('introStep', 0);
 Session.setDefault('finished', false);
 introStepComplete = 4
 
+Session.setDefault('allow_say_yes', false);
+Session.setDefault('say_say', true);
+Session.setDefault('hint_skip_key', false);
+
 Session.setDefault('testingPlayback', false);
+
+Tracker.autorun(function () {
+  $('body').attr('data-step', Session.get('introStep'))
+  $('body').attr('data-listening-ok', Session.get('listening_ok'))
+});
+
+Tracker.autorun(function () {
+  var counter = Session.get('counter');
+  Session.set('say_say', counter < 6);
+  Session.set('allow_say_yes', counter > 9);
+  Session.set('hint_skip_key', counter > 12 && counter % 3 == 0);
+});
+
 
 Template.layout.helpers({
   'introActive': function () {
@@ -218,7 +236,7 @@ Template.tests.onRendered(function(){
 
 Template.tests.events({
   'click .close' : function(event) {
-    window.parent.postMessage({ saymetadata:"close" }, "*" );  
+    exit();
   }
 })
 
@@ -330,8 +348,8 @@ Template.testListening.onRendered(function(){
   var template = this
   annyang.addCommands({
     'hello' : function() {
-      //Session.set('introStep', Session.get('introStep')+1)
       annyang.abort()
+      Session.set('listening_ok', true)
       TemplateVar.set(template, 'understood', true)
       speak(TemplateVar.get(template, "confirmText"), function(){
         Session.set('introStep', Session.get('introStep')+1)
@@ -354,6 +372,8 @@ Meteor.setInterval(function(){
     //sound.play()
     Session.set('annyangIsListening', annyang.isListening());
 }, 500)
+
+
 
 /*
 Template.testSpeakers.events({
