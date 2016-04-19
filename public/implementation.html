@@ -1,1 +1,25 @@
-<iframe ALLOWTRANSPARENCY="true" src="https://entangled-motion.herokuapp.com/" style="position:fixed; top:0; margin:0; padding:0; width:calc(100%); height:calc(100%);"></iframe>
+<div id="saymetadata">
+  <iframe ALLOWTRANSPARENCY="true" src="/" style="position:fixed; top:0; margin:0; padding:0; width:calc(100%); height:calc(100%);"></iframe>
+
+  <script>
+  window.addEventListener("message", receiveMessage, false);
+
+  function receiveMessage(event)
+  {
+    var origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
+    console.log(event)
+    if (/*origin !== "http://example.org:8080"*/ !event.data || !event.data.saymetadata )
+      return;
+
+    switch (event.data.saymetadata) {
+      case 'close': 
+        var elem = document.getElementById("saymetadata");
+        elem.remove()
+        break;
+      default:
+
+    }
+    
+  }
+  </script>
+</div>

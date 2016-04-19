@@ -132,7 +132,7 @@ body {
 
 .dialogue {
     width:50%;
-    min-width:320px;
+    min-width:260px;
     border:solid 1px black;
     padding: 1em;
     background-color: white;
@@ -145,6 +145,17 @@ body {
     color:white;
     padding:1ex 1em;
 }
+
+.dialogue-header .close {
+    float: right;
+}
+
+.dialogue-header .close:hover {
+    background-color: white;
+    color:black;
+    cursor: pointer;
+}
+
 
 .indicatorPanel {
     position: fixed;

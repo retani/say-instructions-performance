@@ -2,6 +2,9 @@
 
   <head>
     <title>magazine</title>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous">
+    </script>
+
     <style>
       body {
         background:white;
@@ -26,8 +29,15 @@
 
   <body class="hatch-new">
     <h1>Flee, issue 2</h1>
-    <iframe ALLOWTRANSPARENCY="true" src="/"></iframe>
+    <img src="http://www.capefearit.com/Simple%20HTML%20page_files/htmlpage.jpg">
+    <!--iframe ALLOWTRANSPARENCY="true" src="/"></iframe-->
     <!--iframe ALLOWTRANSPARENCY="true" src="https://entangled-motion.herokuapp.com/"></iframe-->
+    <div id="stage">
+    </div>
+
+    <button onclick="$('#stage').load('implementation.html')">
+    START BUTTON
+    </button>    
   </body>
 
 </html>

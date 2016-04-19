@@ -217,7 +217,9 @@ Template.tests.onRendered(function(){
 })
 
 Template.tests.events({
-  
+  'click .close' : function(event) {
+    window.parent.postMessage({ saymetadata:"close" }, "*" );  
+  }
 })
 
 Template.tests.helpers({
