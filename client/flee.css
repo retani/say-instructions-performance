@@ -84,6 +84,14 @@ body[data-step="4"] {
     padding: 1em;
 }
 
+.lyrics cite {
+    font-style: normal;
+}
+
+.lyrics p.italics {
+    font-style: italic;
+}
+
 .log {
   opacity: 0.3;
   color:green;
@@ -107,7 +115,6 @@ body[data-step="4"] {
 }
 
 .wrong {
-    text-decoration: line-through;
     color: red;
 }
 
@@ -204,7 +211,6 @@ body[data-step="4"] {
 .close:hover {
     cursor: pointer;
 }
-
 
 .dialogue-header .close {
     float: right;

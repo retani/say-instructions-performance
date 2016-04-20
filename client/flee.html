@@ -1,32 +1,27 @@
 <template name="truth">
-  <div class="truth">
+  <div class="truth lyrics">
     <p>
-      An impossible act of communication, like a dance where one of the dancers accepts orders only. How to move? 
+      An impossible act of communication, where one of the dancers accepts orders only. How to move? 
     </p>
 
-    <p>
+    <p class="italics">
       <cite>Tell me what you see.</cite><br>
       <cite>Just look around you.</cite><br>
-      <cite>The code breaks ground into something new.</cite><br>
-      <cite>An alleyway of lust.</cite><br>
+      <cite>The code</cite> breaks ground into something new.<br>
+      An alleyway of lust.<br>
     </p>
 
-    <h1>entangled in a prison of structured data.</h1>
+    <h1>I am entangled, with you, in a <cite>prison of structured data.</cite></h1>
 
     <p>
-      Once upon a time, the <i>freak</i> followed her home. Home is where peace resides.<br>
-      To solve this problem, I count on you. Go home.
+      Turn! up! the! volume!. <br>
+      <cite>How do we move through?</cite>
     </p>
 
-    <p>
-      Intimacy has broken a sequence of you and me. Fortifications in reasoning continue to brick a passageway. Turn up the volume. <br>
-      How do we move through?
-    </p>
-
-    <em><cite>Drama is how a story evolves.</cite></em>
+    <em>Drama is how <cite>a story evolves.</cite></em>
 
     <p>
-      One step at a time. One thought at once. Iterate. Iterate. Iterate yourself by counting up. 1, 2. Ready.  
+      <cite>One step at a time</cite>. One thought at once. Iterate. Iterate. <cite>Iterate yourself</cite> by counting up. 1, 2. Ready.  
     </p>
   </div>
 </template>
@@ -59,10 +54,10 @@
 
 <template name="dancefloor">
   {{> close}}
-  <div class="dancefloor {{#if listening}}listening{{/if}}">
+  <div class="dancefloor {{#if listening}}listening{{/if}} lyrics">
     <!--h2>Metadata</h2-->
     {{#if command}}
-      <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}"</code>
+      <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}" {{#if yes}}<br>or say "yes"{{/if}}</code>
     {{else}}
       <!--button>Click Me</button-->
       ...
@@ -113,7 +108,7 @@
   <div class="test speakers {{#if playing}}playing{{/if}}">
     <h2>Test Speakers</h2>
     <p>
-      Please set up your speakers and adjust the volume. Then, press <i>Start Playback</i>.
+      To set up your speakers, press <i>Start Playback</i>.
     </p>
     <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
     <p class="indicator">
@@ -134,7 +129,7 @@
       <canvas id="meter" width="500" height="50" class="striped"></canvas>
     </p>
     <p>
-      Ideally, the indicator turns red and goes about half way up if you say something in a relaxed way. In case it stays green, try to speak up or to lower the distance to the microphone. It is also helpful to reduce background noise such as music or fans.
+      Ideally, the indicator goes about half way up and turns red if you say something. In case it stays green, try to speak up or to lower the distance to the microphone. It also helps to reduce background noise such as music or from inbuilt fans.
     </p>
     <p>
       However, things don't need to be perfect.

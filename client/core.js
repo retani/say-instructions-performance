@@ -52,6 +52,15 @@ lonelyWords = ['a','an','her','where','is','the', 'of','one']
 listenCurrent = function() {
   var commands = {}
   var command = Session.get('spliced').command
+  /*
+  commands['say ' + command] = {
+    callback: function() {
+      speak("Please.", function(){
+        announceNext(true)
+      })
+    }
+  } 
+  */
   commands[command] = {
     regexp: new RegExp(command, 'i'),
     callback: switchNext
@@ -62,13 +71,6 @@ listenCurrent = function() {
       callback: switchNext
     }  
   }
-  commands['say ' + command] = {
-    callback: function() {
-      speak("why?", function(){
-        announceNext(true)
-      })
-    }
-  }  
   console.log(commands)
   annyang.removeCommands();
   annyang.addCommands(commands, true);
@@ -140,7 +142,7 @@ announceNext = function(repeat = false) {
     }
     else {
       pause()
-      var text = ( repeat || Session.get('say_say') ? 'Say: ' : '') + command
+      var text = ( repeat || Session.get('say_say') ? 'Say: ' : '') + command 
       speak(text, function(){
         resume()
         /*if (!repeat)*/ listenCurrent()
@@ -169,7 +171,8 @@ spliceText = function() {
     past: string.substring(0,beginIndex),
     remains: string.substring(endIndex, string.length-1),
     preLength: beginWord.fixedLength,
-    isLast: typeof(wordsList[counter+length]) == "undefined"
+    isLast: typeof(wordsList[counter+length]) == "undefined",
+    percentage: 100 * counter/length
   }    
   return spliced  
 }

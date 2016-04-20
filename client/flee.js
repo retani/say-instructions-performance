@@ -85,6 +85,9 @@ Template.dancefloor.helpers({
   },
   'listening' : function() {
     return Session.get('annyangIsListening');
+  },
+  'yes' : function() {
+    return Session.equals('allow_say_yes', true) 
   }
 });
 
