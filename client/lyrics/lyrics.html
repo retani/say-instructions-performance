@@ -1,5 +1,5 @@
 <template name="truth">
-  <div class="truth lyrics" style="opacity:{{opacity}}">
+  <div class="truth lyrics {{#if finished}}pictureframe{{/if}}" style="opacity:{{opacity}}">
 
     {{#if version 'default'}}
 
@@ -17,7 +17,7 @@
       <h1>I am entangled, with you, in a <cite>prison of structured data.</cite></h1>
 
       <p>
-        <cite>One step at a time</cite>. One thought at once. Iterate. Iterate. <cite>Iterate yourself</cite> by counting up. 1, 2. Ready.  
+        <cite>Go one step at a time</cite>. One thought at once. Iterate. Iterate. <cite>Iterate yourself</cite> by counting up. 1, 2. Ready.  
       </p>
   
     {{/if}}

@@ -82,6 +82,7 @@ body[data-step="4"] {
 .truth, .reality {
     position: absolute;
     top: 0;    
+    transition: padding-left 1s, padding-top 1s;
 }
 
 .truth {
@@ -90,11 +91,14 @@ body[data-step="4"] {
     user-select: none;
 }
 
-.lyrics cite {
-    font-style: normal;
+.reality {
 }
 
-.lyrics p.italics {
+.lyrics cite {
+    font-style: inherit;
+}
+
+.lyrics .italics {
     font-style: italic;
 }
 

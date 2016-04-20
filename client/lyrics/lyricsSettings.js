@@ -1,4 +1,4 @@
-lyricsName = 'default'
+lyricsName = 'dd'
 
 lyricsData = {
   'default' : {
@@ -7,7 +7,13 @@ lyricsData = {
     },
     'hint_skip_key' : function() {
       return Session.get('counter') > 16 && ((Session.get('counter')-1) % 4 == 0)
-    }    
+    },/*
+    'offset' : function() {
+      return {
+        top: "7px",
+        left: "7px"
+      }
+    }*/
   },
   'dd' : {
   }

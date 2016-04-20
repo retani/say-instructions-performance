@@ -28,7 +28,7 @@
     {{#if command}}
       <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}" {{#if yes}} or "yes"{{/if}}{{#if hint_key}} or press <img style="height:1.2em; vertical-align:bottom; margin-left:0.6ex;" src="backspace-128.png">{{/if}}</code>
     {{/if}}  
-    <div class="reality lyrics {{#if finished}}pictureframe{{/if}}">
+    <div class="reality lyrics {{#if finished}}pictureframe{{/if}}" style="padding-left:{{reality_offset.left}}; padding-top:{{reality_offset.top}}">
       {{{text}}}
     </div>
     {{> truth}}

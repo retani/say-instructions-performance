@@ -23,22 +23,29 @@ introStepComplete = 4
 Session.setDefault('allow_say_yes', false);
 Session.setDefault('say_say', true);
 Session.setDefault('hint_skip_key', false);
+Session.setDefault('reality_offset', {top:"5px", left:"5px"});
 
 Session.setDefault('testingPlayback', false);
 
+// watch steps and states
 Tracker.autorun(function () {
   $('body').attr('data-step', Session.get('introStep'))
   $('body').attr('data-listening-ok', Session.get('listening_ok'))
 });
 
+// watch lyrics settings and transformations
 Tracker.autorun(function () {
   var d = lyricsData[lyricsName]
   Session.set('say_say', Session.get('counter') < 6);
   Session.set('allow_say_yes', ( d.allow_say_yes ? d.allow_say_yes() : false ) );
   Session.set('hint_skip_key', ( d.hint_skip_key ? d.hint_skip_key() : false ) );
+  if (Session.get('finished')) 
+      Session.set('reality_offset', {top:0, left:0});  
+  else if ( d.reality_offset && !(Session.equals('reality_offset', d.reality_offset())) )
+    Session.set('reality_offset', d.reality_offset());
+  
   //Session.set('hint_skip_key', counter > 16);
 });
-
 
 Template.layout.helpers({
   'introActive': function () {
@@ -95,6 +102,9 @@ Template.dancefloor.helpers({
   },
   'finished' : function() {
     return Session.equals('finished', true)
+  },
+  'reality_offset' : function() {
+    return Session.get('reality_offset')
   }
 });
 
@@ -124,11 +134,15 @@ Template.dancefloor.onRendered(function(){
 Template.truth.helpers({
   'opacity' : function() {
     //return ( Session.get('counter') > -1 ? "0.2" : "0" )
-    return ( Session.get('finished') ? "0" : "0.2" )
+    //return ( Session.get('finished') ? "0" : "0.2" )
+    return "0.2"
   },
   'version' : function(name) {
     return name == lyricsName
-  }
+  },
+  'finished' : function() {
+    return Session.equals('finished', true)
+  },  
 })
 
 Template.truth.onRendered(function(){
