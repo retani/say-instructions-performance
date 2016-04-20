@@ -3,6 +3,12 @@
 @import url(https://fonts.googleapis.com/css?family=Milonga);
 @import url(https://fonts.googleapis.com/css?family=Press+Start+2P);
 
+/* init */
+
+div {
+    margin:0; padding:0;
+}
+
 /* animations */
 
 @keyframes cursorspin {
@@ -66,22 +72,22 @@ body[data-step="4"] {
     width:100%;
     box-sizing: border-box;
     transition: background-color: 0.3s;
+    padding: 1em 1.5em 1em 2em;
 }
 
 .dancefloor.listening {
     background-color: rgba(0,255,0,0.12)
 }
 
-.truth {
-    opacity: 0.2;
+.truth, .reality {
     position: absolute;
-    top: 0;
-    -webkit-user-select: none;
-    user-select: none;
+    top: 0;    
 }
 
-.truth, .dancefloor {
-    padding: 1em;
+.truth {
+    opacity: 0.2;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .lyrics cite {
@@ -257,4 +263,12 @@ body[data-step="4"] {
 
 .indicatorPanel.on .indicator.on {
     background-color: green;
+}
+
+.pictureframe  {
+    border-image-source: url('border-image.png');
+    border-image-slice: 70;
+    border-image-repeat: stretch;
+    border-width: 70px;
+    border-style: solid;
 }

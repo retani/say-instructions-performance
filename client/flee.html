@@ -1,34 +1,3 @@
-<template name="truth">
-  <div class="truth lyrics">
-    <p>
-      An impossible act of communication, where one of the dancers accepts orders only. How to move? 
-    </p>
-
-    <p class="italics">
-      <cite>Tell me what you see.</cite><br>
-      <cite>Just look around you.</cite><br>
-      <cite>The code</cite> breaks ground into something new.<br>
-      An alleyway of lust.<br>
-    </p>
-
-    <h1>I am entangled, with you, in a <cite>prison of structured data.</cite></h1>
-
-    <p>
-      Turn! up! the! volume!. <br>
-      <cite>How do we move through?</cite>
-    </p>
-
-    <em>Drama is how <cite>a story evolves.</cite></em>
-
-    <p>
-      <cite>One step at a time</cite>. One thought at once. Iterate. Iterate. <cite>Iterate yourself</cite> by counting up. 1, 2. Ready.  
-    </p>
-  </div>
-</template>
-
-
-
-
 <head>
   <title>flee</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -54,24 +23,20 @@
 
 <template name="dancefloor">
   {{> close}}
-  <div class="dancefloor {{#if listening}}listening{{/if}} lyrics">
+  <div class="dancefloor {{#if listening}}listening{{/if}}">
     <!--h2>Metadata</h2-->
     {{#if command}}
-      <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}" {{#if yes}}<br>or say "yes"{{/if}}</code>
-    {{else}}
-      <!--button>Click Me</button-->
-      ...
+      <code class="directions" style="{{#if hideInfo}}visibility:hidden{{/if}}">say "{{command}}" {{#if yes}} or "yes"{{/if}}{{#if hint_key}} or press <img style="height:1.2em; vertical-align:bottom; margin-left:0.6ex;" src="backspace-128.png">{{/if}}</code>
     {{/if}}  
-    <div class="reality">
+    <div class="reality lyrics {{#if finished}}pictureframe{{/if}}">
       {{{text}}}
     </div>
+    {{> truth}}
     <code class="log" style="{{#if hideInfo}}display:none{{/if}}">
       {{#each log}}
         {{this}}<br>
       {{/each}}
-    </code>
-
-    {{> truth}}
+    </code>    
   </div>
 
 </template>
@@ -81,9 +46,11 @@
 </template>
 
 <template name="close">
-  <div class="close">
-    X
-  </div>
+  {{#if available}}
+    <div class="close">
+      X
+    </div>
+  {{/if}}
 </template>
 
 <template name="tests">
@@ -108,7 +75,7 @@
   <div class="test speakers {{#if playing}}playing{{/if}}">
     <h2>Test Speakers</h2>
     <p>
-      To set up your speakers, press <i>Start Playback</i>.
+      To test your speakers, press <i>Start Playback</i>.
     </p>
     <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
     <p class="indicator">
@@ -157,9 +124,11 @@
 </template>
 
 <template name="indicatorPanel">
-  <div class="indicatorPanel {{class}} {{#if state}}on{{/if}}">
-    <div class="name">{{name}}</div>
-    <div class="indicator on">&nbsp;</div>
-    <div class="indicator off">&nbsp;</div>
-  </div>
+  {{#if visible}}
+    <div class="indicatorPanel {{class}} {{#if state}}on{{/if}}">
+      <div class="name">{{name}}</div>
+      <div class="indicator on">&nbsp;</div>
+      <div class="indicator off">&nbsp;</div>
+    </div>
+  {{/if}}
 </template>

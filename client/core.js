@@ -29,7 +29,7 @@ initAnnyang = function(){
       console.log("twice")
     }
     console.log("wrong")
-    Session.set('wrong', Session.get('wrong').concat(phrases));
+    Session.set('wrong', Session.get('wrong').concat([phrases[0]]));
     Session.set('inFlow', false);
     announceNext(true)
   })
@@ -47,7 +47,7 @@ initAnnyang = function(){
   })      
 }
 
-lonelyWords = ['a','an','her','where','is','the', 'of','one']
+lonelyWords = ['a','an','her','where','is','the', 'of','one', 'my']
 
 listenCurrent = function() {
   var commands = {}
@@ -88,8 +88,17 @@ listenCurrent = function() {
   console.log("LISTENING: " + command)
 }
 
-switchNext =  function() { 
-  Session.set('counter', Session.get('counter') + Session.get('length'))
+switchNext =  function(distance) { 
+  Session.set('counter', Session.get('counter') + (distance ? distance : Session.get('length')))
+
+  if (Session.get('spliced').isLast) {
+    Meteor.setTimeout(function() {
+      speak("Ready.", function(){
+        Session.set('finished', true);
+      })
+    }, 1000);
+    return
+  }
 
   Tracker.flush()
   var spliced = Session.get('spliced');
@@ -108,12 +117,7 @@ switchNext =  function() {
 
   Tracker.flush()
 
-  if (Session.get('spliced').isLast) {
-    Session.set('finished', true);
-  }
-  else {
-    announceNext() 
-  }
+  announceNext() 
 }
 
 announceNext = function(repeat = false) {
@@ -160,6 +164,12 @@ spliceText = function() {
   if (!tagsList || !wordsList || tagsList.length == 0 || wordsList.length == 0) return {}
 
   var beginWord = wordsList[counter];
+
+  if (typeof(beginWord) == 'undefined') return {
+    past: string,
+    percentage: 100
+  }
+
   var endWord = wordsList[counter+length-1];
   var beginIndex = beginWord.begin
   var endIndex = (wordsList[counter+length] ? wordsList[counter+length].begin-1 : string.length-1)
@@ -172,7 +182,7 @@ spliceText = function() {
     remains: string.substring(endIndex, string.length-1),
     preLength: beginWord.fixedLength,
     isLast: typeof(wordsList[counter+length]) == "undefined",
-    percentage: 100 * counter/length
+    percentage: 100 * counter/wordsList.length
   }    
   return spliced  
 }

@@ -32,10 +32,11 @@ Tracker.autorun(function () {
 });
 
 Tracker.autorun(function () {
-  var counter = Session.get('counter');
-  Session.set('say_say', counter < 6);
-  Session.set('allow_say_yes', counter > 9);
-  Session.set('hint_skip_key', counter > 12 && counter % 3 == 0);
+  var d = lyricsData[lyricsName]
+  Session.set('say_say', Session.get('counter') < 6);
+  Session.set('allow_say_yes', ( d.allow_say_yes ? d.allow_say_yes() : false ) );
+  Session.set('hint_skip_key', ( d.hint_skip_key ? d.hint_skip_key() : false ) );
+  //Session.set('hint_skip_key', counter > 16);
 });
 
 
@@ -88,6 +89,12 @@ Template.dancefloor.helpers({
   },
   'yes' : function() {
     return Session.equals('allow_say_yes', true) 
+  },
+  'hint_key' : function() {
+    return Session.equals('hint_skip_key', true) 
+  },
+  'finished' : function() {
+    return Session.equals('finished', true)
   }
 });
 
@@ -105,8 +112,23 @@ Template.dancefloor.onRendered(function(){
     if (e.keyCode == 8) {
         switchNext()
         return false
+    }
+    if (e.keyCode == 27) {
+        Session.set('finished', false);
+        switchNext(-1)
+        return false
     }    
   }    
+})
+
+Template.truth.helpers({
+  'opacity' : function() {
+    //return ( Session.get('counter') > -1 ? "0.2" : "0" )
+    return ( Session.get('finished') ? "0" : "0.2" )
+  },
+  'version' : function(name) {
+    return name == lyricsName
+  }
 })
 
 Template.truth.onRendered(function(){
@@ -237,6 +259,12 @@ Template.tests.onRendered(function(){
   }     
 })
 
+Template.close.helpers({
+  'available' : function() {
+    return (window.parent != window)
+  }
+})
+
 Template.close.events({
   'click .close' : function(event) {
     exit();
@@ -360,6 +388,13 @@ Template.testListening.onRendered(function(){
     }
   }, true);
   annyang.start()
+})
+
+
+Template.indicatorPanel.helpers({
+  'visible' : function() {
+    return ( Session.equals('finished', false) )
+  }
 })
 
 /*
