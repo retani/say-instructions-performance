@@ -187,6 +187,10 @@ spliceText = function() {
   return spliced  
 }
 
+switchLyrics = function(name) {
+  
+}
+
 Tracker.autorun(function () {
 
   console.log("autorun splice")

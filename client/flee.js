@@ -2,6 +2,8 @@ Session.setDefault('text', 'Once upon a time, the freak followed her home. Home 
 Session.setDefault('spliced', {});
 Session.setDefault('wordsList', []);
 Session.setDefault('tagsList', []);
+Session.setDefault('playlistIndex', 0);
+Session.setDefault('lyricsName', null);
 //Session.setDefault('text', 'Iteration is the act of repeating a process, either to generate a unbounded sequence of outcomes, or with the aim of approaching a desired goal, target or result. Each repetition of the process is also called an "iteration", and the results of one iteration are used as the starting point for the next iteration.');
 //Session.setDefault('text', 'The main purpose of metadata is to facilitate in the discovery of relevant information, more often classified as resource discovery. Metadata also helps organize electronic resources, provide digital identification, and helps support archiving and preservation of the resource. Metadata assists in resource discovery by "allowing resources to be found by relevant criteria, identifying resources, bringing similar resources together, distinguishing dissimilar resources, and giving location information."')
 
@@ -119,15 +121,27 @@ Template.dancefloor.onRendered(function(){
 
   window.onkeydown = function(e) {  
     console.log(e)
-    if (e.keyCode == 8) {
+    if (e.keyCode == 8) { // backspace
         switchNext()
         return false
     }
-    if (e.keyCode == 27) {
+    if (e.keyCode == 27) { // escape
         Session.set('finished', false);
         switchNext(-1)
         return false
-    }    
+    }
+
+    if (e.keyCode == 32) { // space
+      Session.set('finished', false);
+      var i = Session.get('playlistIndex')
+      var new_i = (i < lyricsPlaylist.length-1 ? i+1 : 0)
+      var nextLyricsName = lyricsPlaylist[new_i]
+      Session.set('playlistIndex', new_i)
+      Session.set('lyricsName', nextLyricsName)
+      Session.set('counter', 0);
+      //switchLyrics(nextLyricsName)
+    }
+
   }    
 })
 
@@ -138,120 +152,130 @@ Template.truth.helpers({
     return "0.2"
   },
   'version' : function(name) {
-    return name == lyricsName
+    return name == Session.get('lyricsName')
   },
   'finished' : function() {
     return Session.equals('finished', true)
   },  
 })
 
+Template.truth.onCreated(function(){
+  if (Session.equals('lyricsName', null)) {
+    Session.set('lyricsName', lyricsPlaylist[Session.get('playlistIndex')])
+  }
+})
+
+
 Template.truth.onRendered(function(){
-  var text = $(this.firstNode).html()
+  var template = this
+  this.autorun(function(){
+    Session.get('lyricsName');
+    var text = $(template.firstNode).html()
 
-  var regexTags  = /<[^>]*>/g
-  var regex = regexTags
-  var temp;
-  var index = 0;
-  var tagsList = []
-  while ((temp = regex.exec(text)) !== null && index < 1000) {
-    //console.log(temp)
-    //var msg = 'Found ' + temp[0] + ' ' + temp['index'] + " - " + regex.lastIndex;
-    //console.log(msg);
-    index++
-    tagsList.push ({
-      'content': temp[0],
-      'begin': temp['index'],
-      'end': regex.lastIndex,
-      'tagName': temp[0].match(/\w+/)[0],
-      'opens': temp[0].substr(1,1) != "/"
-    })
-  }  
-
-  console.log(tagsList)
-
-  var wordsList = []
-  var wordsListIndex = 0
-  var fixedLengthSection = false
-  var fixedLengthSectionWordIndex = 0
-  for(var i=-1; i < tagsList.length; i++) {
-    if (i == -1) {
-      var begin = 0
-      var end   = (tagsList[0].begin == 0 ? 0 : tagsList[0].begin)
-    }
-    else {
-      var begin = tagsList[i].end
-      var end   = ( tagsList[i+1] ? tagsList[i+1].begin : text.length-1)
-    }
-    var tag = tagsList[i]
-    if (tag) console.log(tag.tagName)
-    if (tag && tag.tagName == "cite") {
-      fixedLengthSection = tag.opens
-      if (tag.opens) {
-        fixedLengthSectionWordIndex = wordsListIndex
-      }
-      else {
-        //console.log(wordsListIndex, fixedLengthSectionWordIndex)
-        wordsList[fixedLengthSectionWordIndex].fixedLength = wordsListIndex - fixedLengthSectionWordIndex
-      }
-      
-    }
-
-    var chunk = text.substring(begin, end)
-    var regex = /\w+/g
-    var words = []
-    var temp
-    var index = 0
-    while ((temp = regex.exec(chunk)) !== null && index < 1000) {
-      //var msg = 'Found ' + temp[0] + ' ' + temp['index']+begin + " - " + regex.lastIndex+begin;
+    var regexTags  = /<[^>]*>/g
+    var regex = regexTags
+    var temp;
+    var index = 0;
+    var tagsList = []
+    while ((temp = regex.exec(text)) !== null && index < 1000) {
+      //console.log(temp)
+      //var msg = 'Found ' + temp[0] + ' ' + temp['index'] + " - " + regex.lastIndex;
       //console.log(msg);
       index++
-      wordsListIndex++
-      wordsList.push ({
+      tagsList.push ({
         'content': temp[0],
-        'begin': temp['index']+begin,
-        'end': regex.lastIndex+begin,
-        'tagsListIndex': i,
-        'fixedLength': fixedLengthSection
+        'begin': temp['index'],
+        'end': regex.lastIndex,
+        'tagName': temp[0].match(/\w+/)[0],
+        'opens': temp[0].substr(1,1) != "/"
       })
+    }  
+
+    console.log(tagsList)
+
+    var wordsList = []
+    var wordsListIndex = 0
+    var fixedLengthSection = false
+    var fixedLengthSectionWordIndex = 0
+    for(var i=-1; i < tagsList.length; i++) {
+      if (i == -1) {
+        var begin = 0
+        var end   = (tagsList[0].begin == 0 ? 0 : tagsList[0].begin)
+      }
+      else {
+        var begin = tagsList[i].end
+        var end   = ( tagsList[i+1] ? tagsList[i+1].begin : text.length-1)
+      }
+      var tag = tagsList[i]
+      if (tag) console.log(tag.tagName)
+      if (tag && tag.tagName == "cite") {
+        fixedLengthSection = tag.opens
+        if (tag.opens) {
+          fixedLengthSectionWordIndex = wordsListIndex
+        }
+        else {
+          //console.log(wordsListIndex, fixedLengthSectionWordIndex)
+          wordsList[fixedLengthSectionWordIndex].fixedLength = wordsListIndex - fixedLengthSectionWordIndex
+        }
+        
+      }
+
+      var chunk = text.substring(begin, end)
+      var regex = /\w+/g
+      var words = []
+      var temp
+      var index = 0
+      while ((temp = regex.exec(chunk)) !== null && index < 1000) {
+        //var msg = 'Found ' + temp[0] + ' ' + temp['index']+begin + " - " + regex.lastIndex+begin;
+        //console.log(msg);
+        index++
+        wordsListIndex++
+        wordsList.push ({
+          'content': temp[0],
+          'begin': temp['index']+begin,
+          'end': regex.lastIndex+begin,
+          'tagsListIndex': i,
+          'fixedLength': fixedLengthSection
+        })
+      }
+      //console.log(i, words, chunk)
     }
-    //console.log(i, words, chunk)
-  }
 
-  console.log(wordsList)
+    console.log(wordsList)
 
-  Session.set('text', text);
-  Session.set('tagsList', tagsList);
-  Session.set('wordsList', wordsList);
+    Session.set('text', text);
+    Session.set('tagsList', tagsList);
+    Session.set('wordsList', wordsList);
 
-  // var wordsList = []
-  // tagsList.forEach(function (tagElem, index) {
-  //   var begin = tagElem.end
-  //   console.log(text.substring(tagElem.begin, tagElem.end))
+    // var wordsList = []
+    // tagsList.forEach(function (tagElem, index) {
+    //   var begin = tagElem.end
+    //   console.log(text.substring(tagElem.begin, tagElem.end))
 
-  // });
+    // });
 
-  // var parts = text.match(/(<[^>]*>)|(\w*[\.!\?,]?)/g)
-  // var parts = _(parts).filter(function(x){return x.length > 0})
-  // console.log(parts)
+    // var parts = text.match(/(<[^>]*>)|(\w*[\.!\?,]?)/g)
+    // var parts = _(parts).filter(function(x){return x.length > 0})
+    // console.log(parts)
 
-  // var raw = text.replace(/(<([^>]+)>)/ig,"").replace(/(\n|\r)/," ").replace(/\s{2,}/,' ').trim();
-  // Session.set('text', raw);
-  // console.log(raw)
-  
-  // var elem = $(this.firstNode).get(0)
-  // // http://stackoverflow.com/a/18927821
-  // var array = [];
+    // var raw = text.replace(/(<([^>]+)>)/ig,"").replace(/(\n|\r)/," ").replace(/\s{2,}/,' ').trim();
+    // Session.set('text', raw);
+    // console.log(raw)
+    
+    // var elem = $(this.firstNode).get(0)
+    // // http://stackoverflow.com/a/18927821
+    // var array = [];
 
-  // for(var i = 0, childs = elem.childNodes; i < childs.length; i ++) {
-  //   if (childs[i].nodeType === 3 /* document.TEXT_NODE */) {
-  //     array = array.concat(childs[i].nodeValue.trim().split(/\s+/));
-  //   } else {
-  //     array.push(childs[i].outerHTML);
-  //   }
-  // }
+    // for(var i = 0, childs = elem.childNodes; i < childs.length; i ++) {
+    //   if (childs[i].nodeType === 3 /* document.TEXT_NODE */) {
+    //     array = array.concat(childs[i].nodeValue.trim().split(/\s+/));
+    //   } else {
+    //     array.push(childs[i].outerHTML);
+    //   }
+    // }
 
-  // console.log(array)
-
+    // console.log(array)
+  })
   
 })
 
@@ -264,6 +288,8 @@ Template.tests.onCreated(function() {
 })
 
 Template.tests.onRendered(function(){
+  $(".dialogue").draggable()
+
   window.onkeydown = function(e) {  
     console.log(e)
     if (e.keyCode == 8) {
@@ -403,7 +429,6 @@ Template.testListening.onRendered(function(){
   }, true);
   annyang.start()
 })
-
 
 Template.indicatorPanel.helpers({
   'visible' : function() {

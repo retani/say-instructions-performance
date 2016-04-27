@@ -76,7 +76,7 @@ body[data-step="4"] {
 }
 
 .dancefloor.listening {
-    background-color: rgba(0,255,0,0.12)
+    /*background-color: rgba(0,255,0,0.12)*/
 }
 
 .truth, .reality {
@@ -170,6 +170,18 @@ body[data-step="4"] {
     background-color: white;
     line-height: 1.1;
     letter-spacing: 0.1ex;
+    box-shadow: 7px 7px 6px #888888;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
+.dialogue:active {
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;    
+    box-shadow: 5px 5px 5px #888888;
+    top:2px; left:2px;    
 }
 
 .dialogue h2 {
@@ -181,7 +193,6 @@ body[data-step="4"] {
     font-weight: bold;
     padding: 0.6em;
     font-size: inherit;
-    box-shadow: 7px 7px 6px #888888;
 }
 
 .dialogue button.continue {
@@ -199,8 +210,6 @@ body[data-step="4"] {
 .dialogue button:active {
     -webkit-filter: brightness(0.9);
     cursor: pointer;
-    box-shadow: 5px 5px 5px #888888;
-    top:2px; left:2px;
 }
 
 .dialogue-header {
