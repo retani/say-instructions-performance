@@ -17,6 +17,7 @@ Session.setDefault('log', []);
 Session.setDefault('annyangIsListening', false);
 Session.setDefault('annyangIsPaused', false);
 Session.setDefault('wrong', []);
+Session.setDefault('wrongCounter', 0);
 Session.setDefault('inFlow', true);
 Session.setDefault('introStep', 0);
 Session.setDefault('finished', false);
@@ -26,26 +27,35 @@ Session.setDefault('allow_say_yes', false);
 Session.setDefault('say_say', true);
 Session.setDefault('hint_skip_key', false);
 Session.setDefault('reality_offset', {top:"5px", left:"5px"});
+Session.setDefault('annoyed_wrong', false);
+Session.setDefault('truth_opacity', 0.2);
 
 Session.setDefault('testingPlayback', false);
+Session.setDefault('activeTab', null);
 
 // watch steps and states
 Tracker.autorun(function () {
   $('body').attr('data-step', Session.get('introStep'))
   $('body').attr('data-listening-ok', Session.get('listening_ok'))
+  $('body').attr('data-finished', Session.get('finished'))
 });
 
 // watch lyrics settings and transformations
 Tracker.autorun(function () {
-  var d = lyricsData[lyricsName]
+  var d = lyricsData[Session.get('lyricsName')]
+  Session.get('wrong');
+  if (!d) return // not loaded yet
   Session.set('say_say', Session.get('counter') < 6);
   Session.set('allow_say_yes', ( d.allow_say_yes ? d.allow_say_yes() : false ) );
   Session.set('hint_skip_key', ( d.hint_skip_key ? d.hint_skip_key() : false ) );
   if (Session.get('finished')) 
-      Session.set('reality_offset', {top:0, left:0});  
-  else if ( d.reality_offset && !(Session.equals('reality_offset', d.reality_offset())) )
-    Session.set('reality_offset', d.reality_offset());
-  
+    Session.set('reality_offset', {top:0, left:0});  
+  else 
+    Session.set('reality_offset', ( d.reality_offset ? d.reality_offset() : {top:"5px", left:"5px"} ) );
+  if (Session.get('wrongCounter') > 3) {
+    Session.set('annoyed_wrong', true);
+  }
+  Session.set('truth_opacity', ( d.truth_opacity ? d.truth_opacity() : 0.2 ) );
   //Session.set('hint_skip_key', counter > 16);
 });
 
@@ -63,6 +73,12 @@ Template.layout.helpers({
     return Session.get('annyangIsPaused');
   }  
 });
+
+Template.dancefloor.events({
+  'click .next' : function(event) {
+    switchNextLyrics();
+  }
+})
 
 Template.dancefloor.helpers({
   counter: function () {
@@ -107,7 +123,10 @@ Template.dancefloor.helpers({
   },
   'reality_offset' : function() {
     return Session.get('reality_offset')
-  }
+  },
+  'next' : function() {
+    return Session.equals('finished', true) && lyricsPlaylist.length > 1
+  },  
 });
 
 Template.dancefloor.events({
@@ -132,17 +151,7 @@ Template.dancefloor.onRendered(function(){
     }
 
     if (e.keyCode == 32) { // space
-      Session.set('finished', false);
-      var i = Session.get('playlistIndex')
-      var new_i = (i < lyricsPlaylist.length-1 ? i+1 : 0)
-      var nextLyricsName = lyricsPlaylist[new_i]
-      Session.set('playlistIndex', new_i)
-      Session.set('lyricsName', nextLyricsName)
-      Tracker.flush()
-      Session.set('counter', 0);
-      Tracker.flush()
-      announceNext()
-      //switchLyrics(nextLyricsName)
+      switchNextLyrics()
     }
 
   }    
@@ -151,8 +160,8 @@ Template.dancefloor.onRendered(function(){
 Template.truth.helpers({
   'opacity' : function() {
     //return ( Session.get('counter') > -1 ? "0.2" : "0" )
-    //return ( Session.get('finished') ? "0" : "0.2" )
-    return "0.2"
+    return ( Session.get('finished') ? "1" : Session.get('truth_opacity'))
+    //return "0.2"
   },
   'version' : function(name) {
     return name == Session.get('lyricsName')
@@ -348,6 +357,37 @@ Template.indicatorPanel.helpers({
   'visible' : function() {
     return ( Session.equals('finished', false) )
   }
+})
+
+Template.explanation.events({
+  "click h3": function (event) {
+    var name = $(event.target).parent(".explanation").attr("data-name")
+    var active = Session.get('activeTab');
+    var new_active = null
+    if (name == active) new_active = null
+    else new_active = name
+    Session.set('activeTab', new_active);
+  },
+  "click *": function(event) {
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+  },  
+});
+
+Template.explanation.helpers({
+  playlistLength: function () {
+    return lyricsPlaylist.length;
+  },
+  isActive: function(name) {
+    return (Session.equals('activeTab', name) ? "active" : null);
+  }
+});
+
+Template.explanation.onRendered(function(){
+$('body').click(function (event) {
+    //event.stopImmediatePropagation();
+    Session.set('activeTab', null);
+  })
 })
 
 /*

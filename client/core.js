@@ -30,6 +30,7 @@ initAnnyang = function(){
     }
     console.log("wrong")
     Session.set('wrong', Session.get('wrong').concat([phrases[0]]));
+    Session.set('wrongCounter', Session.get('wrongCounter')+1);
     Session.set('inFlow', false);
     announceNext(true, phrases[0])
   })
@@ -146,7 +147,8 @@ announceNext = function(repeat = false, wrong = null) {
     }
     else {
       pause()
-      var text = ( wrong ? 'Not ' + wrong : '! ') + ( repeat || Session.get('say_say') ? 'Say: ' : '') + command 
+      var text = ( wrong && Session.equals('annoyed_wrong',true) ? 'Not ' + wrong : '! ') 
+        + ( repeat || Session.get('say_say') ? 'Say: ' : '') + command 
       speak(text, function(){
         resume()
         /*if (!repeat)*/ listenCurrent()
@@ -187,13 +189,24 @@ spliceText = function() {
   return spliced  
 }
 
-switchLyrics = function(name) {
-
+switchNextLyrics = function(name) {
+  Session.set('finished', false);
+  var i = Session.get('playlistIndex')
+  var new_i = (i < lyricsPlaylist.length-1 ? i+1 : 0)
+  var nextLyricsName = lyricsPlaylist[new_i]
+  Session.set('playlistIndex', new_i)
+  Session.set('lyricsName', nextLyricsName)
+  Tracker.flush()
+  Session.set('counter', 0);
+  Tracker.flush()
+  announceNext()
 }
 
 parseText = function(text){
 
   console.log("parse text", text)
+
+  if (!text || text.length == 0) return
 
   var regexTags  = /<[^>]*>/g
   var regex = regexTags

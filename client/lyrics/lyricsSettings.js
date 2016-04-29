@@ -1,5 +1,5 @@
 lyricsName = 'dd1'
-lyricsPlaylist = ['dd1','dd2','dd3','dd4']
+lyricsPlaylist = ['dd1','dd2','dd3']
 
 
 lyricsData = {
@@ -20,9 +20,27 @@ lyricsData = {
   'dd' : {
   },
   'dd1' : {
+    'offset' : function() {
+      return {
+        top: "7px",
+        left: "7px"
+      }    
+    }
   },  
   'dd2' : {
+    'offset' : function() {
+      return {
+        top: 2 + Session.get('wrong').length + "px",
+        left: 2 + Session.get('wrong').length + "px"
+      }    
+    },    
+    'truth_opacity' : function() {
+      return "0.1";
+    }    
   },  
   'dd3' : {
+    'truth_opacity' : function() {
+      return "0";
+    }
   },  
 }

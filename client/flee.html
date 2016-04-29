@@ -55,6 +55,11 @@
     {{/if}}  
     <div class="reality lyrics {{#if finished}}pictureframe{{/if}}" style="padding-left:{{reality_offset.left}}; padding-top:{{reality_offset.top}}">
       {{{text}}}
+      {{#if next}}
+        <div class="next_button_container">
+          <button class="next" >next &gt;&gt;</button>
+        </div>
+      {{/if}}
     </div>
     {{> truth}}
     <code class="log" style="{{#if hideInfo}}display:none{{/if}}">
@@ -146,18 +151,38 @@
 
 <template name="explanation">
   <div class="explanations">
-    <div class="demo">
+    <div class="explanation demo {{isActive 'demo'}}" data-name="demo">
       <h3>Demonstration</h3>
-      <div class="videoWrapper">
-        <iframe width="420" height="315" src="https://www.youtube.com/embed/_wbUVhrrAL8" frameborder="0" allowfullscreen></iframe>
+      <div class="content">
+        <div class="videoWrapper">
+          <iframe width="420" height="315" src="https://www.youtube.com/embed/_wbUVhrrAL8" frameborder="0" allowfullscreen></iframe>
+        </div>
       </div>
     </div>
-    <div class="extended-demo">
+    <div class="explanation more {{isActive 'more'}}" data-name="more">
       <h3>Explanation</h3>
-      <div class="videoWrapper">  
-        <iframe width="420" height="315" src="https://www.youtube.com/embed/9nNC1ZOe0mw" frameborder="0" allowfullscreen></iframe>
-      </div>    
+      <div class="content">
+        <div class="videoWrapper">  
+          <iframe width="420" height="315" src="https://www.youtube.com/embed/9nNC1ZOe0mw" frameborder="0" allowfullscreen></iframe>
+        </div>    
+      </div>
     </div>
+    <div class="explanation info {{isActive 'info'}}" data-name="info">
+      <h3>Info</h3>
+      <div class="content">
+        <ul>
+          <li>It's like a dance, where one of the dancers accepts orders only</li>
+          <li>Try to speak after the computer</li>
+          <li>Computer only understands exactly what it tells you to speak</li>
+          <li>You may say anything you like, but that does not make it proceed</li>
+          <li>If it doesn't understand you, reduce background noise, move closer to the microphone and make long pauses before and after you speak</li>
+          <li>There are {{playlistLength}} different, consecutive texts</li>
+          <li>It's a feeling, a heartbeat</li>
+          <li>If it still doesn't understand you, use the &lt;backspace&gt; key to proceed manually</li>
+          <li>And remember: Let him lead you</li>
+        </ul>
+      </div>
+    </div>    
   </div>
 </template>
 
