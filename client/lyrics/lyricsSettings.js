@@ -1,5 +1,5 @@
 lyricsName = 'dd1'
-lyricsPlaylist = ['dd1','dd2','dd3']
+lyricsPlaylist = ['dd1','dd2','dd3','dd4']
 
 
 lyricsData = {

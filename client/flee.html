@@ -18,6 +18,7 @@
     {{/if}}
   {{> indicatorPanel name="listening" class="listeningIndicator" state=isListening}}    
   {{/if}}
+  {{> explanation}}
   <!--{{> indicatorPanel name="paused" class="pausedIndicator" state=isPaused}}-->
 </template>
 
@@ -56,7 +57,7 @@
 <template name="tests">
   <div class="tests dialogue">
     <div class="steps dialogue-header">
-      Say: Instructions – Step {{step}}
+      Setup – Step {{step}}
       {{> close}}
     </div>
     {{#if step 1}}
@@ -120,6 +121,23 @@
     <p class="warning">
       If there still is no reaction, there must be a problem. This could be a browser incompatibility or any other technical problem. Sorry. No access to the dancefloor for you. There has been a misunderstanding. Thanks for trying.
     </p>        
+  </div>
+</template>
+
+<template name="explanation">
+  <div class="explanations">
+    <div class="demo">
+      <h3>Demonstration</h3>
+      <div class="videoWrapper">
+        <iframe width="420" height="315" src="https://www.youtube.com/embed/_wbUVhrrAL8" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="extended-demo">
+      <h3>Explanation</h3>
+      <div class="videoWrapper">  
+        <iframe width="420" height="315" src="https://www.youtube.com/embed/9nNC1ZOe0mw" frameborder="0" allowfullscreen></iframe>
+      </div>    
+    </div>
   </div>
 </template>
 

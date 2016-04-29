@@ -170,18 +170,18 @@ body[data-step="4"] {
     background-color: white;
     line-height: 1.1;
     letter-spacing: 0.1ex;
-    box-shadow: 7px 7px 6px #888888;
+    box-shadow: 5px 5px 5px rgba(64,64,64,0.4);
     cursor: -moz-grab;
     cursor: -webkit-grab;
     cursor: grab;
+    user-select: none;
 }
 
 .dialogue:active {
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;    
-    box-shadow: 5px 5px 5px #888888;
-    top:2px; left:2px;    
+    box-shadow: 7px 7px 6px rgba(64,64,64,0.4);
 }
 
 .dialogue h2 {
@@ -193,6 +193,7 @@ body[data-step="4"] {
     font-weight: bold;
     padding: 0.6em;
     font-size: inherit;
+    border-radius: 1em !important;
 }
 
 .dialogue button.continue {
@@ -205,11 +206,13 @@ body[data-step="4"] {
 .dialogue button:hover {
     -webkit-filter: brightness(0.9);
     cursor: pointer;
+    border-radius: 1em;
 }
 
 .dialogue button:active {
     -webkit-filter: brightness(0.9);
     cursor: pointer;
+    border-radius: 1em;
 }
 
 .dialogue-header {
@@ -284,4 +287,19 @@ body[data-step="4"] {
     border-image-repeat: stretch;
     border-width: 70px;
     border-style: solid;
+}
+
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+}
+.videoWrapper iframe {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
