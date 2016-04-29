@@ -9,7 +9,7 @@
 
 <template name="layout">
   {{#if unsupported}}
-    Unfortunately, it won't work with your browser and/or device. Sorry. On a desktop computer, it's most likely to work with <a href="https://www.google.com/chrome/">Chrome</a>
+    {{> unsupportedMessage}}
   {{else}}
     {{#if introActive}}
       {{> intro}}
@@ -20,6 +20,30 @@
   {{/if}}
   {{> explanation}}
   <!--{{> indicatorPanel name="paused" class="pausedIndicator" state=isPaused}}-->
+</template>
+
+<template name="Dialogue">
+  <div class="tests dialogue">
+    <div class="steps dialogue-header">
+      {{headerText}}
+      {{> close}}
+    </div> 
+    {{> UI.contentBlock}}
+  </div>
+</template>
+
+<template name="unsupportedMessage">
+  {{#Dialogue headerText='Say: Instructions – Apologies'}}
+    <p class="speak">
+      Unfortunately, it won't work with your browser and/or device. Sorry. On a desktop computer, it's most likely to work with <a href="https://www.google.com/chrome/"> Chrome</a>.
+    </p>
+    <button>
+      I'll try with another browser
+    </button>
+    <button>
+      I want to watch someone else doing it
+    </button>
+  {{/Dialogue}}  
 </template>
 
 <template name="dancefloor">
@@ -55,11 +79,7 @@
 </template>
 
 <template name="tests">
-  <div class="tests dialogue">
-    <div class="steps dialogue-header">
-      Setup – Step {{step}}
-      {{> close}}
-    </div>
+  {{#Dialogue headerText=headerText}}
     {{#if step 1}}
       {{> Template.dynamic template='testSpeakers'}}
     {{/if}}
@@ -69,7 +89,7 @@
     {{#if step 3}}
       {{> Template.dynamic template='testListening'}}
     {{/if}}
-  </div>
+  {{/Dialogue}}
 </template>
 
 <template name="testSpeakers">

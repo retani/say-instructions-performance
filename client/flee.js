@@ -184,6 +184,25 @@ Template.truth.onRendered(function(){
 
 // separately get tags and words(including trailing .,?!): /(<[^>]*>)|(\w*[\.!\?,]?)/g
 
+Template.Dialogue.onRendered(function(){
+  $(".dialogue").draggable(/*{handle: ".dialogue-header"}*/)
+});
+
+Template.unsupportedMessage.onRendered(function(){
+  speak(this.$(".speak").text())
+})
+
+
+Template.tests.helpers({
+  'step' : function(step) {
+    if (step) return Session.equals('introStep', step);
+    else return Session.get('introStep');
+  },
+  headerText: function () {
+    return "Setup – Step " + Session.get('introStep')
+  }  
+})
+
 Template.tests.onCreated(function() {
   if (Session.equals('introStep', 0))
     Session.set('introStep', 1)
@@ -191,7 +210,6 @@ Template.tests.onCreated(function() {
 })
 
 Template.tests.onRendered(function(){
-  $(".dialogue").draggable(/*{handle: ".dialogue-header"}*/)
 
   window.onkeydown = function(e) {  
     console.log(e)
@@ -211,13 +229,6 @@ Template.close.helpers({
 Template.close.events({
   'click .close' : function(event) {
     exit();
-  }
-})
-
-Template.tests.helpers({
-  'step' : function(step) {
-    if (step) return Session.equals('introStep', step);
-    else return Session.get('introStep');
   }
 })
 
