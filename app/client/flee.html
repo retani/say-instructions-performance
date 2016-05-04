@@ -113,21 +113,31 @@
 
 <template name="testMicrophone">
   <div class="test microphone">
-    <h2>Test Microphone</h2>
-    <p>
-      Please allow your browser to access the microphone. 
-    </p>
-    <p>
-      Once you make noise, you should see the below <!--span class="striped" style="width:7ex; display:inline-block;">&nbsp;</span--> audio meter react.
-      <canvas id="meter" width="500" height="50" class="striped"></canvas>
-    </p>
-    <p>
-      Ideally, the indicator goes about half way up and turns red if you say something. In case it stays green, try to speak up or to lower the distance to the microphone. It also helps to reduce background noise such as music or from inbuilt fans.
-    </p>
-    <p>
-      However, things don't need to be perfect.
-      <button class="continue">Continue &gt;&gt;</button>
-    </p>
+    {{#if avaiable}}
+      <h2>Test Microphone</h2>
+      <p>
+        Please allow your browser to access the microphone. 
+      </p>
+      <p>
+        Once you make noise, you should see the below <!--span class="striped" style="width:7ex; display:inline-block;">&nbsp;</span--> audio meter react.
+        <canvas id="meter" width="500" height="50" class="striped"></canvas>
+      </p>
+      <p>
+        Ideally, the indicator goes about half way up and turns red if you say something. In case it stays green, try to speak up or to lower the distance to the microphone. It also helps to reduce background noise such as music or from inbuilt fans.
+      </p>
+      <p>
+        However, things don't need to be perfect.
+        <button class="continue">Continue &gt;&gt;</button>
+      </p>
+    {{else}}
+      <h2>Check microphone</h2>
+      <p>
+        It works better, if you are closer to the microphone and with less background noise.
+      </p>
+      <p>
+        <button class="continue">Continue &gt;&gt;</button>
+      </p>
+    {{/if}}
   </div>
 </template>
 

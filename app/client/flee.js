@@ -52,7 +52,7 @@ Tracker.autorun(function () {
     Session.set('reality_offset', {top:0, left:0});  
   else 
     Session.set('reality_offset', ( d.reality_offset ? d.reality_offset() : {top:"5px", left:"5px"} ) );
-  if (Session.get('wrongCounter') > 3) {
+  if (Session.get('wrongCounter') > 2 && Math.random() > 0.3 ) {
     Session.set('annoyed_wrong', true);
   }
   Session.set('truth_opacity', ( d.truth_opacity ? d.truth_opacity() : 0.2 ) );
@@ -231,7 +231,8 @@ Template.tests.onRendered(function(){
 
 Template.close.helpers({
   'available' : function() {
-    return (window.parent != window)
+    //return (window.parent != window)
+    return false;
   }
 })
 
@@ -299,21 +300,37 @@ Template.testMicrophone.events({
 Template.testMicrophone.helpers({
   'playing' : function() {
     return TemplateVar.get("playing")
+  },
+  'available' : function() {
+    return TemplateVar.get('available')
   }
 })
 
+Template.testMicrophone.onCreated(function(){
+  var available = true
+  var parentLoc = window.parent.location
+  if (parentLoc != 'undefined') {
+    if (parentLoc.protocol != "https:")
+      var available = false
+  }  
+  TemplateVar.set('available', available)
+})
+
 Template.testMicrophone.onRendered(function(){
-  audioContext = null;
-  meter = null;
-  canvasContext = null;
-  audioMeterWIDTH=500;
-  audioMeterHEIGHT=50;
-  clipLevel = 0.98;
-  averaging = 0.95;
-  clipLag = 750;
-  rafID = null;
-  audioMeterInit(document.getElementById( "meter" ));
-  meter = createAudioMeter(audioContext,clipLevel,averaging,clipLag);
+
+  if (TemplateVar.get("available")) {
+    audioContext = null;
+    meter = null;
+    canvasContext = null;
+    audioMeterWIDTH=500;
+    audioMeterHEIGHT=50;
+    clipLevel = 0.98;
+    averaging = 0.95;
+    clipLag = 750;
+    rafID = null;
+    audioMeterInit(document.getElementById( "meter" ));
+    meter = createAudioMeter(audioContext,clipLevel,averaging,clipLag);
+  }
 
   annyang.addCommands({
     "let's go" : function() {

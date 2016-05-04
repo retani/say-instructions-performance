@@ -281,7 +281,7 @@ body[data-step="4"] {
     position: fixed;
     bottom: 1em;
     right: 1em;
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 .indicatorPanel:nth-of-type(1) {
@@ -292,6 +292,7 @@ body[data-step="4"] {
     float: left;
     margin-left: 0.5em;
     background-color: grey;
+    border: 1px solid rgba(0,0,0,0.8);
     border-radius: 50%;
     width: 1em;
     height: 1em;
@@ -370,6 +371,9 @@ body[data-step="4"] {
     text-decoration: underline;
 }
 
+.explanations .explanation:not(.active):not(:hover) h3 {
+    opacity: 0.6;
+}
 
 .explanations .explanation .content {
     height:0;
@@ -385,6 +389,8 @@ body[data-step="4"] {
     padding-bottom: 3em;
     padding-right:1em;
     background-color: rgba(255,255,255,0.8);
+    width:100%;
+    max-width:500px;
 }
 
 .explanations .explanation.active .content {
