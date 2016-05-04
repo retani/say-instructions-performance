@@ -336,7 +336,7 @@ var resume = function() {
   Meteor.setTimeout(function(){
     if (!annyang.isListening()) {
       colorLog("FAILSAFE RESUME", 'red')
-      annyang.resume()
+      annyang.start()
     }    
   },500)
 }
