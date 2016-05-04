@@ -328,8 +328,8 @@ var pause = function() {
 }
 
 var resume = function() {
-  annyang.resume()
-  //annyang.start()
+  //annyang.resume()
+  annyang.start()
   Session.set('annyangIsPaused', false);
 
   // failsafe

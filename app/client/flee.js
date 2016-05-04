@@ -136,7 +136,15 @@ Template.dancefloor.events({
 });
 
 Template.dancefloor.onRendered(function(){
-  announceNext()
+  var text = $(".truth").html()
+  parseText(text)  
+  Meteor.setTimeout(function(){
+    console.log(Session.get('spliced'))
+    if (Session.get('spliced').preLength)
+      Session.set('length', Session.get('spliced').preLength);
+    announceNext()  
+  },1200)
+  
 
   window.onkeydown = function(e) {  
     console.log(e)
@@ -144,7 +152,7 @@ Template.dancefloor.onRendered(function(){
         switchNext()
         return false
     }
-    if (e.keyCode == 27) { // escape
+    if (e.keyCode == 27 && Session.get('counter') >= 1) { // escape
         Session.set('finished', false);
         switchNext(-1)
         return false
@@ -171,7 +179,7 @@ Template.truth.helpers({
   }
 })
 
-Template.truth.onCreated(function(){
+Template.dancefloor.onCreated(function(){
   if (Session.equals('lyricsName', null)) {
     Session.set('lyricsName', lyricsPlaylist[Session.get('playlistIndex')])
   }
@@ -179,16 +187,20 @@ Template.truth.onCreated(function(){
 
 Tracker.autorun(function(){
   Session.get('lyricsName')
-  Tracker.afterFlush(function() {
-    var text = $(".truth").html()
-    parseText(text)
-  })
+  if (Session.get('introStep') == introStepComplete){
+    Tracker.afterFlush(function() {
+      var text = $(".truth").html()
+      parseText(text)
+      console.log(Session.get('scpliced'))    
+    })
+  }
 })
 
 Template.truth.onRendered(function(){
   var template = this
   var text = $(template.firstNode).html()
-  parseText(text)      
+  parseText(text)  
+  console.log(Session.get('scpliced'))    
 })
 
 // separately get tags and words(including trailing .,?!): /(<[^>]*>)|(\w*[\.!\?,]?)/g
@@ -349,19 +361,19 @@ Template.testMicrophone.onDestroyed(function(){
 
 Template.testListening.helpers({
   'infoText' : function() {
-    return 'Thank you! Now we need to test speech recognition. Say "Hello".'
+    return 'Thank you! Now we need to test speech recognition. Say "Hi, everybody".'
   }
 })
 
 Template.testListening.onCreated(function(){
-  TemplateVar.set(this,"infoText", 'Thank you! Now we need to test speech recognition. Speak out the word "Hello".')
-  TemplateVar.set(this,"confirmText", "Very Good! I read you. Let's go.")
+  TemplateVar.set(this,"infoText", 'Thank you! Now we need to test speech recognition. Speak out loud: "Hi, everybody".')
+  TemplateVar.set(this,"confirmText", "Hi! I read you. Let's go.")
 })
 
 Template.testListening.onRendered(function(){
   var template = this
   annyang.addCommands({
-    'hello' : function() {
+    'Hi everybody' : function() {
       annyang.abort()
       Session.set('listening_ok', true)
       TemplateVar.set(template, 'understood', true)

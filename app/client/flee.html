@@ -103,11 +103,11 @@
   <div class="test speakers {{#if playing}}playing{{/if}}">
     <h2>Test Speakers</h2>
     <p>
-      Press <i>Start Playback</i>.
+      Press <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
     </p>
-    <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
+    
     <p class="indicator">
-      If you hear a voice counting «1.. 2..», press <i>Continue</i>.<br> Otherwise, check your audio setup.
+      If you hear a voice counting «1.. 2..», press <i>Continue</i>.<br> Otherwise, check your audio setup and press "start playback" again.
       <button class="continue">Continue &gt;&gt;</button>
     </p>
   </div>
@@ -153,7 +153,7 @@
       {{TemplateVar.get "confirmText"}}
     </p>    
     <p class="info">
-      If there is no reaction to you saying "Hello", try again: Remain silent for 5 seconds, then say "Hello" loud and clear, then pause again for a while.
+      If there is no reaction to you saying "Hi, everybody", try again: Remain silent for 5 seconds, then say "Hi, everybody" loud and clear, then pause again for a while.
     </p>
     <p class="warning">
       If there still is no reaction, there must be a problem. This could be a browser incompatibility or any other technical problem. Sorry. No access to the dancefloor for you. There has been a misunderstanding. Thanks for trying.
