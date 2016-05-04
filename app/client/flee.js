@@ -307,6 +307,7 @@ Template.testMicrophone.helpers({
 })
 
 Template.testMicrophone.onCreated(function(){
+  /*
   var available = true
   var parentLoc = window.parent.location
   if (parentLoc != 'undefined') {
@@ -314,6 +315,8 @@ Template.testMicrophone.onCreated(function(){
       var available = false
   }  
   TemplateVar.set('available', available)
+  */
+  TemplateVar.set('available', true)
 })
 
 Template.testMicrophone.onRendered(function(){
