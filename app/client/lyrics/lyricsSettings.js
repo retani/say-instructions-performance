@@ -22,16 +22,16 @@ lyricsData = {
   'dd1' : {
     'offset' : function() {
       return {
-        top: "7px",
-        left: "7px"
+        top: "8px",
+        left: "10px"
       }    
     }
   },  
   'dd2' : {
     'offset' : function() {
       return {
-        top: 2 + Session.get('wrong').length + "px",
-        left: 2 + Session.get('wrong').length + "px"
+        top: 0,//2 + Session.get('wrong').length + "px",
+        left: 0,//2 + Session.get('wrong').length + "px"
       }    
     },    
     'truth_opacity' : function() {

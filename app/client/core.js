@@ -2,10 +2,18 @@ speak = function(text, cb) {
   var utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-US';
   utterance.rate = 0.8;
-  window.speechSynthesis.speak(utterance);  
+  var ended = false
   utterance.onend = function(event) {
+      ended = true
       if (cb) cb()
-  };
+  };  
+  window.speechSynthesis.speak(utterance);
+  Meteor.setTimeout(function() {
+    if (!ended) {
+      console.log("should have ended. Trigger callback!")
+      cb()
+    }
+  }, 500 * text.length); // there is a problem with onEnded, as it seem to fail sometimes. This is a fallback. Superficial assunmption is that that each letter needs somehow less than 500ms to pronounce
 }
 
 /*
@@ -77,15 +85,7 @@ listenCurrent = function() {
   annyang.addCommands(commands, true);
   //annyang.init(commands, true);
   annyang.debug()
-  if (Session.equals('annyangIsListening', false)) {
-    console.log("START LISTENING")
-    annyang.start(/*{continuous: false}*/);
-    Session.set('annyangIsListening', true);
-  }
-  else if (Session.equals('annyangIsPaused', true)) {
-    console.log("RESUME LISTENING")
-    annyang.resume();
-  }
+  resume()
   console.log("LISTENING: " + command)
 }
 
@@ -129,8 +129,8 @@ announceNext = function(repeat = false, wrong = null) {
     var commands = {}
     var command = Session.get('spliced').command
     //Session.set('command', command);
-    console.log("NEW COMMAND: " + command)    
   }
+  console.log("COMMAND: " + command)    
   if (command != null && command != "") {
     //annyang.pause(); Session.set('annyangIsPaused', true);
     if (Session.equals('auto', true)) {
@@ -141,7 +141,7 @@ announceNext = function(repeat = false, wrong = null) {
           autoRepeatTimer = Meteor.setTimeout(function() {
             announceNext(true)
             console.log("REPEATING")
-          },8000)
+          },6000)
         })    
       }, 500);        
     }
@@ -149,7 +149,9 @@ announceNext = function(repeat = false, wrong = null) {
       pause()
       var text = ( wrong && Session.equals('annoyed_wrong',true) ? 'Not ' + wrong : '! ') 
         + ( repeat || Session.get('say_say') ? 'Say: ' : '') + command 
+      console.log("speaking: " + text)
       speak(text, function(){
+        console.log("spoken")
         resume()
         /*if (!repeat)*/ listenCurrent()
       })
@@ -323,23 +325,25 @@ Tracker.autorun(function () {
 
 var pause = function() {
   //annyang.pause()
+  console.log("pause()")
   annyang.abort()
   Session.set('annyangIsPaused', true);
 }
 
 var resume = function() {
   //annyang.resume()
+  console.log("resume()")
   annyang.start()
   Session.set('annyangIsPaused', false);
-
-  // failsafe
-  Meteor.setTimeout(function(){
-    if (!annyang.isListening()) {
-      colorLog("FAILSAFE RESUME", 'red')
-      annyang.start()
-    }    
-  },500)
 }
+
+// failsafe
+Meteor.setInterval(function(){
+  if (Session.equals('annyangIsPaused', false) && !annyang.isListening()) {
+    colorLog("FAILSAFE RESUME", 'red')
+    annyang.start()
+  }    
+},2000)
 
 if (annyang) {
   initAnnyang()

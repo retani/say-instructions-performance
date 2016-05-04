@@ -15,7 +15,7 @@ Session.setDefault('command', null);
 Session.setDefault('auto', false);
 Session.setDefault('log', []);
 Session.setDefault('annyangIsListening', false);
-Session.setDefault('annyangIsPaused', false);
+Session.setDefault('annyangIsPaused', true);
 Session.setDefault('wrong', []);
 Session.setDefault('wrongCounter', 0);
 Session.setDefault('inFlow', true);
@@ -136,14 +136,11 @@ Template.dancefloor.events({
 });
 
 Template.dancefloor.onRendered(function(){
-  var text = $(".truth").html()
-  parseText(text)  
+  if (Session.get('spliced').preLength)
+    Session.set('length', Session.get('spliced').preLength);
   Meteor.setTimeout(function(){
-    console.log(Session.get('spliced'))
-    if (Session.get('spliced').preLength)
-      Session.set('length', Session.get('spliced').preLength);
     announceNext()  
-  },1200)
+  },500)
   
 
   window.onkeydown = function(e) {  
