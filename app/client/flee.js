@@ -341,7 +341,7 @@ Template.testMicrophone.onRendered(function(){
 })
 
 Template.testMicrophone.onDestroyed(function(){
-  meter.shutdown();
+  if (meter) meter.shutdown();
 })
 
 Template.testListening.helpers({

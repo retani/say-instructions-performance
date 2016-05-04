@@ -149,6 +149,12 @@ body[data-step="4"] {
     visibility: hidden;
 }
 
+.test.listening .info,
+.test.listening .warning {    
+    font-size: 80%;
+    opacity: 0.7;
+}
+
 .wrong {
     color: red;
 }
@@ -213,6 +219,8 @@ body[data-step="4"] {
 
 .dialogue h2 {
     text-decoration: underline;
+    font-size: inherit;
+    margin-top: 1em;
 }
 
 .dialogue button {
@@ -246,10 +254,11 @@ body[data-step="4"] {
 .dialogue-header {
     margin:-1em -2em;
     margin-bottom: 0;
-    background:black;
-    color:#eee;
+    background:#222;
+    color:rgba(255,255,255,0.8);
     padding:1em 2em;
     text-align: center;
+    text-transform: uppercase;
 }
 
 .close {

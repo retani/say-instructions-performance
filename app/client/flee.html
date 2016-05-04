@@ -25,7 +25,9 @@
 <template name="Dialogue">
   <div class="tests dialogue">
     <div class="steps dialogue-header">
-      {{headerText}}
+      <small>
+        {{headerText}}
+      </small>
       {{> close}}
     </div> 
     {{> UI.contentBlock}}
@@ -101,11 +103,11 @@
   <div class="test speakers {{#if playing}}playing{{/if}}">
     <h2>Test Speakers</h2>
     <p>
-      To test your speakers, press <i>Start Playback</i>.
+      Press <i>Start Playback</i>.
     </p>
     <button class="toggle_playback">{{#if playing}}Stop{{else}}Start{{/if}} playback</button>
     <p class="indicator">
-      Do you hear a voice counting «1.. 2..»? <br>If you do, press <i>Continue</i>. Otherwise, check your audio setup.
+      If you hear a voice counting «1.. 2..», press <i>Continue</i>.<br> Otherwise, check your audio setup.
       <button class="continue">Continue &gt;&gt;</button>
     </p>
   </div>
@@ -132,10 +134,10 @@
     {{else}}
       <h2>Check microphone</h2>
       <p>
-        It works better, if you are closer to the microphone and with less background noise.
+        Please make sure, that you are close enough to the microphone. It also works better when there is less background noise.
       </p>
       <p>
-        <button class="continue">Continue &gt;&gt;</button>
+        <button class="continue">Understood &gt;&gt;</button>
       </p>
     {{/if}}
   </div>
