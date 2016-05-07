@@ -30,12 +30,12 @@ lyricsData = {
   'dd2' : {
     'offset' : function() {
       return {
-        top: 0,//2 + Session.get('wrong').length + "px",
-        left: 0,//2 + Session.get('wrong').length + "px"
+        top: 2 * Session.get('wrong').length + "px",
+        left: 2 * Session.get('wrong').length + "px"
       }    
     },    
     'truth_opacity' : function() {
-      return "0.1";
+      return 0.2 - 0.15*Session.get('counter')/Session.get('wordsList').length;
     }    
   },  
   'dd3' : {

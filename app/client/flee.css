@@ -241,12 +241,14 @@ body[data-step="4"] {
 
 .dialogue button:hover {
     -webkit-filter: brightness(0.9);
+    filter: brightness(0.9);
     cursor: pointer;
     border-radius: 1em;
 }
 
 .dialogue button:active {
-    -webkit-filter: brightness(0.9);
+    -webkit-filter: brightness(0.8);
+    filter: brightness(0.8);
     cursor: pointer;
     border-radius: 1em;
 }
@@ -362,6 +364,10 @@ body[data-step="4"] {
 
     /* for indicatorPanel */
     width: calc(100% - 146px);
+}
+
+.explanations video {
+    width:100%;   
 }
 
 .explanations .explanation {

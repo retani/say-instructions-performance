@@ -32,6 +32,7 @@ Session.setDefault('truth_opacity', 0.2);
 
 Session.setDefault('testingPlayback', false);
 Session.setDefault('activeTab', null);
+Session.setDefault('justwatch', false);
 
 // watch steps and states
 Tracker.autorun(function () {
@@ -51,7 +52,7 @@ Tracker.autorun(function () {
   if (Session.get('finished')) 
     Session.set('reality_offset', {top:0, left:0});  
   else 
-    Session.set('reality_offset', ( d.reality_offset ? d.reality_offset() : {top:"5px", left:"5px"} ) );
+    Session.set('reality_offset', ( d.offset ? d.offset() : {top:"5px", left:"5px"} ) );
   if (Session.get('wrongCounter') > 2 && Math.random() > 0.3 ) {
     Session.set('annoyed_wrong', true);
   }
@@ -206,8 +207,27 @@ Template.Dialogue.onRendered(function(){
   $(".dialogue").draggable(/*{handle: ".dialogue-header"}*/)
 });
 
+Template.unsupportedMessage.helpers({
+  'show' : function(event) {
+    return TemplateVar.get('show')
+  },  
+})
+
+Template.unsupportedMessage.events({
+  'click .exit' : function(event) {
+    TemplateVar.set("show",false)
+    speak("Goodby. Go back!")
+  },
+  'click .watch' : function(event) {
+    TemplateVar.set("show",false)
+    Session.set('justwatch', true);
+  }  
+})
+
+
 Template.unsupportedMessage.onRendered(function(){
   speak(this.$(".speak").text())
+  TemplateVar.set('show',true)
 })
 
 
@@ -408,7 +428,10 @@ Template.explanation.helpers({
     return lyricsPlaylist.length;
   },
   isActive: function(name) {
-    return (Session.equals('activeTab', name) ? "active" : null);
+    if (Session.equals('justwatch', true) && name == 'demo') 
+      return "active"
+    else
+      return (Session.equals('activeTab', name) ? "active" : null);
   }
 });
 
@@ -428,8 +451,10 @@ var sound = new Howl({
 */
 
 Meteor.setInterval(function(){
+  if (!annyang) return false
   //if (Session.equals('annyangIsListening', true))
     //sound.play()
+    var is = (annyang ? annyang.isListening() : false )
     Session.set('annyangIsListening', annyang.isListening());
 }, 500)
 

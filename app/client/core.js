@@ -1,5 +1,8 @@
 speak = function(text, cb) {
+  console.log(SpeechSynthesisUtterance)
+  if (!SpeechSynthesisUtterance) return false
   var utterance = new SpeechSynthesisUtterance(text);
+  if (!utterance) return false
   utterance.lang = 'en-US';
   utterance.rate = 0.8;
   var ended = false
@@ -339,6 +342,7 @@ var resume = function() {
 
 // failsafe
 Meteor.setInterval(function(){
+  if (!annyang) return
   if (Session.equals('annyangIsPaused', false) && !annyang.isListening()) {
     colorLog("FAILSAFE RESUME", 'red')
     annyang.start()

@@ -35,17 +35,19 @@
 </template>
 
 <template name="unsupportedMessage">
-  {{#Dialogue headerText='Say: Instructions & Apologies'}}
-    <p class="speak">
-      Unfortunately, it won't work with your browser and/or device. Sorry. On a desktop computer, it's most likely to work with <a href="https://www.google.com/chrome/"> Chrome</a>.
-    </p>
-    <button>
-      I'll try with another browser
-    </button>
-    <button>
-      I want to watch someone else doing it
-    </button>
-  {{/Dialogue}}  
+  {{#if show}}
+    {{#Dialogue headerText='Say: Instructions & Apologies'}}
+      <p class="speak">
+        Unfortunately, it won't work with your browser and/or device. Sorry. On a desktop computer, it's most likely to work with <a href="https://www.google.com/chrome/"> Chrome</a>.
+      </p>
+      <button class="exit">
+        I'll try with another browser
+      </button>
+      <button class="watch">
+        I want to watch someone else doing it
+      </button>
+    {{/Dialogue}}  
+  {{/if}}
 </template>
 
 <template name="dancefloor">
@@ -166,19 +168,21 @@
     <div class="explanation demo {{isActive 'demo'}}" data-name="demo">
       <h3>Demonstration</h3>
       <div class="content">
-        <div class="videoWrapper">
-          <iframe width="420" height="315" src="https://www.youtube.com/embed/_wbUVhrrAL8" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <video controls src="http://res.cloudinary.com/retani/video/upload/vc_h264/v1462636887/holger_does_it_mjqgte.mp4">
+          <!--div class="videoWrapper">
+            <iframe width="420" height="315" src="https://www.youtube.com/embed/_wbUVhrrAL8" frameborder="0" allowfullscreen></iframe>
+          </div-->
+        </video>          
       </div>
     </div>
-    <div class="explanation more {{isActive 'more'}}" data-name="more">
+    <!--div class="explanation more {{isActive 'more'}}" data-name="more">
       <h3>Explanation</h3>
       <div class="content">
         <div class="videoWrapper">  
           <iframe width="420" height="315" src="https://www.youtube.com/embed/9nNC1ZOe0mw" frameborder="0" allowfullscreen></iframe>
         </div>    
       </div>
-    </div>
+    </div-->
     <div class="explanation info {{isActive 'info'}}" data-name="info">
       <h3>Info</h3>
       <div class="content">
